@@ -43,7 +43,8 @@ ajax.get|getJSON|post(url, {opt:data}, function(data){
 
 
 var ajax = {//usage: oldajax.send();
-	//needs error handling, jsonp handling, progress handling, proper post handling
+	//add responseType arg setting
+	//needs error handling, jsonp handling, proper post handling
 	send: function(args, callback){// args takes object of: {verb, url, headers, json, url_var} note: url_var must be an array
 		if (typeof args === "undefined" || typeof callback === "undefined"){
 			throw "Missing arguments";
@@ -69,29 +70,35 @@ var ajax = {//usage: oldajax.send();
 		}
 		//add http:// to url if ommited
 
-		//add check for support(lol) and ie activex
-		var req = new XMLHttpRequest();
-		/*
-		progress handlers
-		*/
-		if(typeof args.progress !== "undefined"){
+		function makeXHR(){//this should let IE have properish suport
+			if (!window.XMLHttpRequest) {
+				return new window.ActiveXObject("Microsoft.XMLHTTP");
+			} else if (window.XMLHttpRequest) {//for normal browsers
+				return new XMLHttpRequest();
+			}
+		}
+		var req = makeXHR();
+		req.withCredentials = true;
+
+		/*Event listeners*/
+		if(typeof args.progress !== "undefined"){//adds progress listener if progress callback is defined
 			req.addEventListener("progress", args.progress, false);
 		}
-		if(typeof args.progress !== "undefined"){
+		if(typeof args.progress !== "undefined"){//adds error listener if callback is defined
 			req.addEventListener("error", args.error, false);
 		}
+		//oReq.addEventListener("abort", transferCanceled, false);
 		
 		req.open(args.verb, args.url);
-		if(typeof args.headers !== "undefined"){
+		if(typeof args.headers !== "undefined"){//sets headers
 			headers.forEach(function(value, key){
 				req.setRequestHeader(key, value);
 			});
 		}
 
-		//set ready state
 		req.onload = res;
-		req.send();
-		function res(){
+		req.send();//sends the request
+		function res(){//callback function
 			if (args.json === true){
 				callback(JSON.parse(this.response), this.status);
 			} else {
