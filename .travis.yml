@@ -1,1 +1,2 @@
+install: "npm install uglify-js"
 script: "ruby build.rb"
