@@ -50,7 +50,7 @@ var ajax = {//usage: oldajax.send();
 			throw "Missing arguments";
 		} else{
 			if (typeof args.json === "undefined"){
-				args.json = true;
+				args.json = false;
 			}
 			if (typeof args.verb === "undefined"){//!args.verb.match(/^(get|post|put|delete)$/i) ||
 				args.verb = 'get';//defaults to a GET request
