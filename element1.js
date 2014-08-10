@@ -78,7 +78,7 @@ var ajax = {//usage: oldajax.send();
 			}
 		}
 		var req = makeXHR();
-		req.withCredentials = true;
+		//req.withCredentials = true; apprently this kills the CORS
 
 		/*Event listeners*/
 		if(typeof args.progress !== "undefined"){//adds progress listener if progress callback is defined

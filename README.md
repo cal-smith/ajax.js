@@ -24,7 +24,7 @@ ajax.send({
 });
 ```
 
-Future syntax:
+possible Future syntax:
 ```javascript
 new ajax({
 	verb:(default: GET) GET|POST|PUT|DELETE,
