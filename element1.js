@@ -1,24 +1,6 @@
 /*
 element1.js
 
-new ajax({
-	verb:(default: GET) GET|POST|PUT|DELETE,
-	url: "your.url.com",
-	url_var:["must","be","array"],
-	headers:{"key":"value"},
-	json: true|false,
-	progress: function(event){
-		//event handle
-	},
-	error: function(event){
-		//event handle
-	}
-}).done(function(data){
-	console.log(data);
-});
-
-.done = q.done. deffered request via promises.
-
 ajax.send({
 	verb:(default: GET) GET|POST|PUT|DELETE,
 	url: "your.url.com",
@@ -41,8 +23,7 @@ ajax.get|getJSON|post(url, {opt:data}, function(data){
 */
 'use strict';
 
-
-var ajax = {//usage: oldajax.send();
+var ajax = {
 	//add responseType arg setting
 	//needs error handling, jsonp handling, proper post handling
 	send: function(args, callback){// args takes object of: {verb, url, headers, json, url_var} note: url_var must be an array
