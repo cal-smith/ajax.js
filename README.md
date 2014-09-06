@@ -38,15 +38,11 @@ ajax.send({
 	console.log(data);
 });
 
-ajax.get("your.url.com", function(data){
+ajax.get("your.url.com", function(data){ //Same idea for post, put, and delete
 	console.log(data)
 });
 
-ajax.getJSON({url: "your.url.com"}, function(data){
-	console.log(data)
-});
-
-ajax.post("your.url.com", function(data){
+ajax.getJSON({url: "your.url.com"}, function(data){ //same idea as get above, but showing you can still pass an args object
 	console.log(data)
 });
 ```

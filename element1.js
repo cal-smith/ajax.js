@@ -104,7 +104,7 @@ ajax.send({
 		}
 	};
 
-	ajax.prototype.get = function(args, callback){
+	/*ajax.prototype.get = function(args, callback){
 		if (typeof args === "string") {
 			args = {
 				url: args
@@ -113,6 +113,30 @@ ajax.send({
 		args.verb = "GET";
 		return ajax.prototype.send(args, callback);
 	};
+
+	ajax.prototype.post = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "POST";
+		return ajax.prototype.send(args, callback);
+	};*/
+
+	var types = ["get", "post", "put", "delete"];
+	for (var i = 0; i < types.length; i++) {
+		ajax.prototype[types[i]] = function(args, callback){
+			if (typeof args === "string") {
+				args = {
+					url: args
+				};
+			}
+			args.verb = types[i];
+			return ajax.prototype.send(args, callback);
+		};
+	};
+	
 
 	ajax.prototype.getJSON = function(args, callback){
 		if (typeof args === "string") {
@@ -125,15 +149,6 @@ ajax.send({
 		return ajax.prototype.send(args, callback);
 	};
 
-	ajax.prototype.post = function(args, callback){
-		if (typeof args === "string") {
-			args = {
-				url: args
-			};
-		}
-		args.verb = "POST";
-		return ajax.prototype.send(args, callback);
-	};
 	if (typeof window.ajax === "undefined") {
 		window.ajax = new ajax();
 	}
