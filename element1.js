@@ -1,16 +1,26 @@
 /*
 element1.js
 
-ajax.send({
-	verb:(default: GET) GET|POST|PUT|DELETE,
-	url: "your.url.com",
-	url_var:{
-		url: "vars",
-		have: "to",
-		be: "objects"
-	},
+ajax.send(args, callback)
+
+ajax.get|getJSON|post(url|args, callback);
+
+args = {
+	verb:"GET|POST|PUT|DELETE", //defaults to GET
+	url: "http://url.com",
+	url_var:{"key":"value"},
 	headers:{"key":"value"},
 	json: true|false,
+	progress: event,
+	error: event
+}
+
+ajax.send({
+	verb:"GET",
+	url: "your.url.com",
+	url_var:{"key":"value"},
+	headers:{"key":"value"},
+	json: true,
 	progress: function(event){
 		//event handle
 	},
@@ -19,10 +29,6 @@ ajax.send({
 	}
 }, function(data){
 	console.log(data);
-});
-
-ajax.get|getJSON|post(url, {opt:data}, function(data){
-	
 });
 */
 (function(window){
@@ -41,7 +47,7 @@ ajax.get|getJSON|post(url, {opt:data}, function(data){
 			if (typeof args.json === "undefined"){
 				args.json = false;
 			}
-			if (typeof args.verb === "undefined"){//!args.verb.match(/^(get|post|put|delete)$/i) ||
+			if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
 				args.verb = 'get';//defaults to a GET request
 			}
 		}
@@ -98,6 +104,36 @@ ajax.get|getJSON|post(url, {opt:data}, function(data){
 		}
 	}
 
+	ajax.prototype.get = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "GET";
+		return ajax.prototype.send(args, callback);
+	}
+
+	ajax.prototype.getJSON = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "GET";
+		args.json = true;
+		return ajax.prototype.send(args, callback);
+	}
+
+	ajax.prototype.post = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "POST";
+		return ajax.prototype.send(args, callback);
+	}
 	if (typeof window.ajax === "undefined") {
 		window.ajax = new ajax();
 	}
