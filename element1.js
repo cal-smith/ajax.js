@@ -31,12 +31,21 @@ ajax.send({
 	console.log(data);
 });
 */
+
 (function(window){
 	'use strict';
 	//add responseType arg setting
-	//needs error handling, jsonp handling, proper post handling
+	//needs jsonp handling, proper post handling(?)
 	var ajax = function(){
-		var answer = 42;
+
+	};
+
+	function makeXHR(){//this should let IE have properish suport
+		if (!window.XMLHttpRequest) {
+			return new window.ActiveXObject("Microsoft.XMLHTTP");
+		} else if (window.XMLHttpRequest) {//for normal browsers
+			return new XMLHttpRequest();
+		}
 	}
 
 	ajax.prototype.send = function(args, callback){
@@ -58,37 +67,28 @@ ajax.send({
 				var k = Object.keys(parts)[i];
 				var v = parts[Object.keys(parts)[i]];
 				if (i === 0) {
-					args.url_var += encodeURI(k) + "=" + encodeURI(k);
+					args.url_var += encodeURI(k) + "=" + encodeURI(v);
 				} else {
-					args.url_var += "&" + encodeURI(k) + "=" + encodeURI(k);
+					args.url_var += "&" + encodeURI(k) + "=" + encodeURI(v);
 				}
 			}
 			args.url += args.url_var;
 		}
-		//add http:// to url if ommited
+		//add http:// to url if ommited?
 
-		function makeXHR(){//this should let IE have properish suport
-			if (!window.XMLHttpRequest) {
-				return new window.ActiveXObject("Microsoft.XMLHTTP");
-			} else if (window.XMLHttpRequest) {//for normal browsers
-				return new XMLHttpRequest();
-			}
-		}
 		var req = makeXHR();
-		//req.withCredentials = true; apprently this kills the CORS
 
-		/*Event listeners*/
-		if(typeof args.progress !== "undefined"){//adds progress listener if progress callback is defined
+		/*Bind event listeners*/
+		if(typeof args.progress !== "undefined"){//adds progress listener
 			req.addEventListener("progress", args.progress, false);
 		}
-		if(typeof args.progress !== "undefined"){//adds error listener if callback is defined
+		if(typeof args.progress !== "undefined"){//adds error listener
 			req.addEventListener("error", args.error, false);
 		}
-		//oReq.addEventListener("abort", transferCanceled, false);
 		
 		req.open(args.verb, args.url);
 		if(typeof args.headers !== "undefined"){//sets headers
-			headers.forEach(function(value, key){
+			args.headers.forEach(function(value, key){
 				req.setRequestHeader(key, value);
 			});
 		}
@@ -102,7 +102,7 @@ ajax.send({
 				callback(this.response, this.status);
 			}
 		}
-	}
+	};
 
 	ajax.prototype.get = function(args, callback){
 		if (typeof args === "string") {
@@ -112,7 +112,7 @@ ajax.send({
 		}
 		args.verb = "GET";
 		return ajax.prototype.send(args, callback);
-	}
+	};
 
 	ajax.prototype.getJSON = function(args, callback){
 		if (typeof args === "string") {
@@ -123,7 +123,7 @@ ajax.send({
 		args.verb = "GET";
 		args.json = true;
 		return ajax.prototype.send(args, callback);
-	}
+	};
 
 	ajax.prototype.post = function(args, callback){
 		if (typeof args === "string") {
@@ -133,7 +133,7 @@ ajax.send({
 		}
 		args.verb = "POST";
 		return ajax.prototype.send(args, callback);
-	}
+	};
 	if (typeof window.ajax === "undefined") {
 		window.ajax = new ajax();
 	}
