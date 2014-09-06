@@ -3,16 +3,31 @@ element1.js
 
 Lighter than Hydrogen! Its an AJAX library!
 
-element1 is the core of [reallyawesome.js](https://github.com/hansolo669/reallyawesome.js) and is intented to be a nice lightweight AJAX library.
+element1 is intented to be a nice lightweight AJAX library.  
+Unminified the library is 4kb, minification takes it down to ~2kb.
 
-Current syntax:
+Usage:
 ```javascript
-ajax.send({
-	verb:(default: GET) GET|POST|PUT|DELETE,
-	url: "your.url.com",
-	url_var:["must","be","array"],
+ajax.send(args, callback)
+
+ajax.get|getJSON|post(url|args, callback)
+
+args = {
+	verb:"GET|POST|PUT|DELETE", //defaults to GET
+	url: "http://url.com",
+	url_var:{"key":"value"},
 	headers:{"key":"value"},
 	json: true|false,
+	progress: event,
+	error: event
+}
+
+ajax.send({
+	verb:"GET",
+	url: "your.url.com",
+	url_var:{"key":"value"},
+	headers:{"key":"value"},
+	json: true,
 	progress: function(event){
 		//event handle
 	},
@@ -22,23 +37,16 @@ ajax.send({
 }, function(data){
 	console.log(data);
 });
-```
 
-Future syntax:
-```javascript
-new ajax({
-	verb:(default: GET) GET|POST|PUT|DELETE,
-	url: "your.url.com",
-	url_var:["must","be","array"],
-	headers:{"key":"value"},
-	json: true|false,
-	progress: function(event){
-		//event handle
-	},
-	error: function(event){
-		//event handle
-	}
-}).done(function(data){
-	console.log(data);
+ajax.get("your.url.com", function(data){
+	console.log(data)
+});
+
+ajax.getJSON({url: "your.url.com"}, function(data){
+	console.log(data)
+});
+
+ajax.post("your.url.com", function(data){
+	console.log(data)
 });
 ```

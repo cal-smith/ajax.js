@@ -1,30 +1,26 @@
 /*
 element1.js
 
-new ajax({
-	verb:(default: GET) GET|POST|PUT|DELETE,
-	url: "your.url.com",
-	url_var:["must","be","array"],
+ajax.send(args, callback)
+
+ajax.get|getJSON|post(url|args, callback);
+
+args = {
+	verb:"GET|POST|PUT|DELETE", //defaults to GET
+	url: "http://url.com",
+	url_var:{"key":"value"},
 	headers:{"key":"value"},
 	json: true|false,
-	progress: function(event){
-		//event handle
-	},
-	error: function(event){
-		//event handle
-	}
-}).done(function(data){
-	console.log(data);
-});
-
-.done = q.done. deffered request via promises.
+	progress: event,
+	error: event
+}
 
 ajax.send({
-	verb:(default: GET) GET|POST|PUT|DELETE,
+	verb:"GET",
 	url: "your.url.com",
-	url_var:["must","be","array"],
+	url_var:{"key":"value"},
 	headers:{"key":"value"},
-	json: true|false,
+	json: true,
 	progress: function(event){
 		//event handle
 	},
@@ -34,36 +30,37 @@ ajax.send({
 }, function(data){
 	console.log(data);
 });
-
-ajax.get|getJSON|post(url, {opt:data}, function(data){
-	
-});
 */
-'use strict';
-
-
-var ajax = {//usage: oldajax.send();
+(function(window){
+	'use strict';
 	//add responseType arg setting
 	//needs error handling, jsonp handling, proper post handling
-	send: function(args, callback){// args takes object of: {verb, url, headers, json, url_var} note: url_var must be an array
+	var ajax = function(){
+		var answer = 42;
+	}
+
+	ajax.prototype.send = function(args, callback){
+		//args takes object of: {verb, url, headers, json, url_var} note: url_var must be an object
 		if (typeof args === "undefined" || typeof callback === "undefined"){
 			throw "Missing arguments";
 		} else{
 			if (typeof args.json === "undefined"){
 				args.json = false;
 			}
-			if (typeof args.verb === "undefined"){//!args.verb.match(/^(get|post|put|delete)$/i) ||
+			if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
 				args.verb = 'get';//defaults to a GET request
 			}
 		}
 		if (typeof args.url_var !== "undefined"){//sets url vars
 			var parts = args.url_var;
-			args.url_var = "?"
-			for (var i = 0; i < parts.length; i++) {
+			args.url_var = "?";
+			for (var i = 0; i < Object.keys(parts).length; i++) {
+				var k = Object.keys(parts)[i];
+				var v = parts[Object.keys(parts)[i]];
 				if (i === 0) {
-					args.url_var += encodeURI(parts[i]);
+					args.url_var += encodeURI(k) + "=" + encodeURI(k);
 				} else {
-					args.url_var += "&" + encodeURI(parts[i]);
+					args.url_var += "&" + encodeURI(k) + "=" + encodeURI(k);
 				}
 			}
 			args.url += args.url_var;
@@ -78,7 +75,7 @@ var ajax = {//usage: oldajax.send();
 			}
 		}
 		var req = makeXHR();
-		req.withCredentials = true;
+		//req.withCredentials = true; apprently this kills the CORS
 
 		/*Event listeners*/
 		if(typeof args.progress !== "undefined"){//adds progress listener if progress callback is defined
@@ -106,4 +103,38 @@ var ajax = {//usage: oldajax.send();
 			}
 		}
 	}
-};
+
+	ajax.prototype.get = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "GET";
+		return ajax.prototype.send(args, callback);
+	}
+
+	ajax.prototype.getJSON = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "GET";
+		args.json = true;
+		return ajax.prototype.send(args, callback);
+	}
+
+	ajax.prototype.post = function(args, callback){
+		if (typeof args === "string") {
+			args = {
+				url: args
+			};
+		}
+		args.verb = "POST";
+		return ajax.prototype.send(args, callback);
+	}
+	if (typeof window.ajax === "undefined") {
+		window.ajax = new ajax();
+	}
+})(window);
