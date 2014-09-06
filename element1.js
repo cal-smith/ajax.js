@@ -4,7 +4,11 @@ element1.js
 ajax.send({
 	verb:(default: GET) GET|POST|PUT|DELETE,
 	url: "your.url.com",
-	url_var:["must","be","array"],
+	url_var:{
+		url: "vars",
+		have: "to",
+		be: "objects"
+	},
 	headers:{"key":"value"},
 	json: true|false,
 	progress: function(event){
@@ -21,12 +25,16 @@ ajax.get|getJSON|post(url, {opt:data}, function(data){
 	
 });
 */
-'use strict';
-
-var ajax = {
+(function(window){
+	'use strict';
 	//add responseType arg setting
 	//needs error handling, jsonp handling, proper post handling
-	send: function(args, callback){// args takes object of: {verb, url, headers, json, url_var} note: url_var must be an array
+	var ajax = function(){
+		var answer = 42;
+	}
+
+	ajax.prototype.send = function(args, callback){
+		//args takes object of: {verb, url, headers, json, url_var} note: url_var must be an object
 		if (typeof args === "undefined" || typeof callback === "undefined"){
 			throw "Missing arguments";
 		} else{
@@ -39,12 +47,14 @@ var ajax = {
 		}
 		if (typeof args.url_var !== "undefined"){//sets url vars
 			var parts = args.url_var;
-			args.url_var = "?"
-			for (var i = 0; i < parts.length; i++) {
+			args.url_var = "?";
+			for (var i = 0; i < Object.keys(parts).length; i++) {
+				var k = Object.keys(parts)[i];
+				var v = parts[Object.keys(parts)[i]];
 				if (i === 0) {
-					args.url_var += encodeURI(parts[i]);
+					args.url_var += encodeURI(k) + "=" + encodeURI(k);
 				} else {
-					args.url_var += "&" + encodeURI(parts[i]);
+					args.url_var += "&" + encodeURI(k) + "=" + encodeURI(k);
 				}
 			}
 			args.url += args.url_var;
@@ -87,4 +97,8 @@ var ajax = {
 			}
 		}
 	}
-};
+
+	if (typeof window.ajax === "undefined") {
+		window.ajax = new ajax();
+	}
+})(window);
