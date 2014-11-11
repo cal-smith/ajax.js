@@ -46,7 +46,7 @@ ajax.send({
 	'use strict';
 	//add responseType arg setting
 	//needs jsonp handling, proper post handling(?)
-	var ajax = function(){};
+	var Ajax = function(){};
 
 	function makeXHR(){//this should let IE have properish suport
 		if (!window.XMLHttpRequest) {
@@ -56,25 +56,26 @@ ajax.send({
 		}
 	}
 
-	ajax.prototype.send = function(args, callback){
+	Ajax.prototype.send = function(args, callback){
 		if (typeof args === 'function') {
 			callback = args;
 			args.verb = this.verb;
 			args.url = this.url;
 			args.json = this.parse_json;
-			if (typeof this.set_headers !== 'undefined') args.headers = this.set_headers;
-			if (typeof this.progress_callback !== 'undefined') args.progress = this.progress_callback;
-			if (typeof this.error_callback !== 'undefined') args.error = this.error_callback;
-		};
+			typeof this.set_headers !== 'undefined' && (args.headers = this.set_headers);
+			typeof this.progress_callback !== 'undefined' && (args.progress = this.progress_callback);
+			typeof this.error_callback !== 'undefined' && (args.error = this.error_callback);
+		}
 
 		//default to current page if no url is specified
-		typeof args.url === 'undefined'?args.url=window.location.href:args.url;
+		typeof args.url === 'undefined' && (args.url = window.location.href);
+		//truthy && dothings() is like if(truthy){ dothings() }
 
 		if (typeof args === "undefined" || typeof callback === "undefined"){
-			if (typeof args === "undefined") throw "Missing arguments";
-			if (typeof callback === "undefined") throw "Missing callback";
+			if(typeof args === "undefined") { throw "Missing arguments" };
+			if(typeof callback === "undefined") { throw "Missing callback" };
 		} else{
-			typeof args.json === "undefined"?args.json = false:args.json;
+			typeof args.json === "undefined" && (args.json = false);
 			if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
 				args.verb = 'get';//default to a GET request
 			}
@@ -95,6 +96,7 @@ ajax.send({
 			}
 			args.url += args.url_var;
 		}
+
 		//add http:// to url if ommited?
 
 		var req = makeXHR();
@@ -128,67 +130,67 @@ ajax.send({
 
 	var types = ["get", "post", "put", "delete"];
 	for (var i = 0; i < types.length; i++) {
-		ajax.prototype[types[i]] = function(url, args, callback){
+		Ajax.prototype[types[i]] = function(url, args, callback){
 			if (typeof args === 'undefined' && typeof callback === 'undefined') {
 				this.verb = types[i];
-				typeof url === 'undefined'?this.url=window.location.href:this.url = url;
+				typeof url === 'undefined' ? this.url=window.location.href : this.url = url;
 				return this;
 			} else {
-				typeof args === "function" ? callback = args : args;
+				typeof args === "function" && (callback = args);
 				if (typeof url === 'object') {
 					args = url;
 				} else {
-					typeof url === 'undefined'?args.url=window.location.href:args.url = url;
+					typeof url === 'undefined' ? args.url=window.location.href : args.url = url;
 				}
 				args.verb = types[i];
-				return ajax.prototype.send(args, callback);
+				return Ajax.prototype.send(args, callback);
 			}
 		};
 
-		ajax.prototype[types[i]+"JSON"] = function(url, args, callback){
+		Ajax.prototype[types[i]+"JSON"] = function(url, args, callback){
 			if (typeof args === 'undefined' && typeof callback === 'undefined') {
 				this.verb = types[i];
 				this.parse_json = true;
-				typeof url === 'undefined'?this.url=window.location.href:this.url = url;
+				typeof url === 'undefined' ? this.url=window.location.href : this.url = url;
 				return this;
 			} else {
-				typeof args === "function" ? callback = args : args;
+				typeof args === 'function' && (callback = args);
 				if (typeof url === 'object') {
 					args = url;
 				} else {
-					typeof url === 'undefined'?args.url=window.location.href:args.url = url;
+					typeof url === 'undefined' ? args.url=window.location.href : args.url = url;
 				}
 				args.verb = types[i];
 				args.json = true;
-				return ajax.prototype.send(args, callback);
+				return Ajax.prototype.send(args, callback);
 			}
 		};
-	};
+	}
 
-	ajax.prototype.var = function(vars){
+	Ajax.prototype.var = function(vars){
 		//object of url vars
 		this.url_var = vars;
 		return this;
 	};
 
-	ajax.prototype.json = function(json){
+	Ajax.prototype.json = function(json){
 		//true|false for json parsing
-		typeof json === "undefined"?this.parse_json = true : this.parse_json = json;
+		typeof(json === "undefined") ? this.parse_json = true : this.parse_json = json;
 		return this;
 	};
 
-	ajax.prototype.headers = function(headers){
+	Ajax.prototype.headers = function(headers){
 		//headers
 		this.set_headers = headers;
 		return this;
 	};
 
-	ajax.prototype.progress = function(callback){
+	Ajax.prototype.progress = function(callback){
 		this.progress_callback = callback;
 		return this;
 	};
 
-	ajax.prototype.error = function(callback){
+	Ajax.prototype.error = function(callback){
 		this.error_callback = callback;
 		return this;
 	};
@@ -196,7 +198,7 @@ ajax.send({
 	if (typeof window.ajax === "undefined") {
 		Object.defineProperty(window, "ajax", {
 			get: function(){
-				return new ajax();
+				return new Ajax();
 			}
 		});
 	}
