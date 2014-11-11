@@ -3,7 +3,7 @@ script: "ruby build.rb"
 deploy:
   provider: releases
   api-key: "b12c404a97d95a967cdc5a3fdf421db46afc6787"
-  file: "element1.min.js"
+  file: "ajax.min.js"
   skip_cleanup: true
   on:
     tags: true
