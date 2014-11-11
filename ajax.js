@@ -46,9 +46,7 @@ ajax.send({
 	'use strict';
 	//add responseType arg setting
 	//needs jsonp handling, proper post handling(?)
-	var ajax = function(){
-
-	};
+	var ajax = new Function();
 
 	function makeXHR(){//this should let IE have properish suport
 		if (!window.XMLHttpRequest) {
@@ -63,7 +61,8 @@ ajax.send({
 			callback = args;
 			args.verb = this.verb;
 			args.url = this.url;
-			args.json = this.parse_json;
+			console.log(this.parse_json);
+			this.parse_json !== 'undefined'?args.json = this.parse_json:args.json=false;
 			if (typeof this.set_headers !== 'undefined') args.headers = this.set_headers;
 			if (typeof this.progress_callback !== 'undefined') args.progress = this.progress_callback;
 			if (typeof this.error_callback !== 'undefined') args.error = this.error_callback;
@@ -196,6 +195,10 @@ ajax.send({
 	};
 
 	if (typeof window.ajax === "undefined") {
-		window.ajax = new ajax();
+		Object.defineProperty(window, "ajax", {
+			get: function(){
+				return new ajax;
+			}
+		});
 	}
 })(window);
