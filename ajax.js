@@ -46,7 +46,7 @@ ajax.send({
 	'use strict';
 	//add responseType arg setting
 	//needs jsonp handling, proper post handling(?)
-	var ajax = new Function();
+	var ajax = function(){};
 
 	function makeXHR(){//this should let IE have properish suport
 		if (!window.XMLHttpRequest) {
