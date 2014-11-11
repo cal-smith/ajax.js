@@ -72,8 +72,8 @@ ajax.send({
 		//truthy && dothings() is like if(truthy){ dothings() }
 
 		if (typeof args === "undefined" || typeof callback === "undefined"){
-			if(typeof args === "undefined") { throw "Missing arguments" };
-			if(typeof callback === "undefined") { throw "Missing callback" };
+			if(typeof args === "undefined") { throw "Missing arguments"; }
+			if(typeof callback === "undefined") { throw "Missing callback"; }
 		} else{
 			typeof args.json === "undefined" && (args.json = false);
 			if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
