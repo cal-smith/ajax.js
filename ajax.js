@@ -61,6 +61,7 @@ ajax.send({
 	Ajax.prototype.send = function(args, callback){
 		var promise = (typeof args === "undefined" && typeof callback === "undefined")?true:false;
 		if (typeof args === "function" || (typeof args === "undefined" && typeof callback === "undefined")) {
+			if (typeof args === "function") { callback = args };
 			if (typeof args === "undefined") { args = {}; }
 			args.verb = this.verb;
 			args.url_var = this.url_var;
@@ -120,17 +121,18 @@ ajax.send({
 		req.send();//sends the request
 		function res(){//callback function
 			if (args.json === true){
-				callback(JSON.parse(this.response), this.status);
+				callback(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
 			} else {
-				callback(this.response, this.status);
+				callback(this.response, this.status, this.getAllResponseHeaders());
 			}
 		}
 		if (promise){
 			return new Promise(function(resolve, reject){
-				callback = function(response, status){
-					return resolve(response, status);
-				}
-				//add reject handleing
+				callback = function(response){
+					return resolve(response);
+				};
+
+				req.addEventListener("error", reject, false);
 			});
 		}
 	};
@@ -155,7 +157,7 @@ ajax.send({
 		}
 	}
 
-	//nice big block of method defs. just the best way to deal with this right now.
+	//nice big block of method defs.
 	Ajax.prototype.post = function(url, args, callback) { return helperhelper(this, false, "post" , url, args, callback); };
 	Ajax.prototype.get = function(url, args, callback) { return helperhelper(this, false, "get" , url, args, callback); };
 	Ajax.prototype.put = function(url, args, callback) { return helperhelper(this, false, "put" , url, args, callback); };
