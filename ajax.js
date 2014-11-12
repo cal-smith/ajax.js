@@ -128,44 +128,35 @@ ajax.send({
 		}
 	};
 
-	var types = ["get", "post", "put", "delete"];
-	for (var i = 0; i < types.length; i++) {
-		Ajax.prototype[types[i]] = function(url, args, callback){
-			if (typeof args === 'undefined' && typeof callback === 'undefined') {
-				this.verb = types[i];
-				typeof url === 'undefined' ? this.url=window.location.href : this.url = url;
-				return this;
+	//helps us make helper functions... yay!
+	function helperhelper(thisarg, json, verb, url, args, callback){
+		if (typeof args === 'undefined' && typeof callback === 'undefined') {
+			thisarg.verb = verb;
+			thisarg.parse_json = json;
+			typeof url === 'undefined' ? thisarg.url=window.location.href : thisarg.url = url;
+			return thisarg;
+		} else {
+			typeof args === "function" && (callback = args);
+			if (typeof url === 'object') {
+				args = url;
 			} else {
-				typeof args === "function" && (callback = args);
-				if (typeof url === 'object') {
-					args = url;
-				} else {
-					typeof url === 'undefined' ? args.url=window.location.href : args.url = url;
-				}
-				args.verb = types[i];
-				return Ajax.prototype.send(args, callback);
+				typeof url === 'undefined' ? args.url=window.location.href : args.url = url;
 			}
-		};
-
-		Ajax.prototype[types[i]+"JSON"] = function(url, args, callback){
-			if (typeof args === 'undefined' && typeof callback === 'undefined') {
-				this.verb = types[i];
-				this.parse_json = true;
-				typeof url === 'undefined' ? this.url=window.location.href : this.url = url;
-				return this;
-			} else {
-				typeof args === 'function' && (callback = args);
-				if (typeof url === 'object') {
-					args = url;
-				} else {
-					typeof url === 'undefined' ? args.url=window.location.href : args.url = url;
-				}
-				args.verb = types[i];
-				args.json = true;
-				return Ajax.prototype.send(args, callback);
-			}
-		};
+			args.verb = verb;
+			args.json = json;
+			return Ajax.prototype.send(args, callback);
+		}
 	}
+
+	//nice big block of method defs. just the best way to deal with this right now.
+	Ajax.prototype.post = function(url, args, callback) { return helperhelper(this, false, "post" , url, args, callback); };
+	Ajax.prototype.get = function(url, args, callback) { return helperhelper(this, false, "get" , url, args, callback); };
+	Ajax.prototype.put = function(url, args, callback) { return helperhelper(this, false, "put" , url, args, callback); };
+	Ajax.prototype.delete = function(url, args, callback) { return helperhelper(this, false, "delete" , url, args, callback); };
+	Ajax.prototype.postJSON = function(url, args, callback) { return helperhelper(this, true, "post" , url, args, callback); };
+	Ajax.prototype.getJSON = function(url, args, callback) { return helperhelper(this, true, "get" , url, args, callback); };
+	Ajax.prototype.putJSON = function(url, args, callback) { return helperhelper(this, true, "put" , url, args, callback); };
+	Ajax.prototype.deleteJSON = function(url, args, callback) { return helperhelper(this, true, "delete" , url, args, callback); };
 
 	Ajax.prototype.var = function(vars){
 		//object of url vars
