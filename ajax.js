@@ -46,7 +46,9 @@ ajax.send({
 	"use strict";
 	//add responseType arg setting
 	//needs jsonp handling, proper post handling(?)
-	var Ajax = function(){};
+	var Ajax = function(){
+		
+	};
 
 	function makeXHR(){//this should let IE have properish suport
 		if (!window.XMLHttpRequest) {
@@ -57,8 +59,9 @@ ajax.send({
 	}
 
 	Ajax.prototype.send = function(args, callback){
-		if (typeof args === "function") {
-			callback = args;
+		var promise = (typeof args === "undefined" && typeof callback === "undefined")?true:false;
+		if (typeof args === "function" || (typeof args === "undefined" && typeof callback === "undefined")) {
+			if (typeof args === "undefined") { args = {}; }
 			args.verb = this.verb;
 			args.url_var = this.url_var;
 			args.url = this.url;
@@ -72,14 +75,9 @@ ajax.send({
 		typeof args.url === "undefined" && (args.url = window.location.href);
 		//truthy && dothings() is like if(truthy){ dothings() }
 
-		if (typeof args === "undefined" || typeof callback === "undefined"){
-			if(typeof args === "undefined") { throw "Missing arguments"; }
-			if(typeof callback === "undefined") { throw "Missing callback"; }
-		} else{
-			typeof args.json === "undefined" && (args.json = false);
-			if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
-				args.verb = "get";//default to a GET request
-			}
+		typeof args.json === "undefined" && (args.json = false);
+		if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
+			args.verb = "get";//default to a GET request
 		}
 
 		//set url vars
@@ -117,7 +115,7 @@ ajax.send({
 				req.setRequestHeader(key, value);
 			});
 		}
-
+		
 		req.onload = res;
 		req.send();//sends the request
 		function res(){//callback function
@@ -126,6 +124,14 @@ ajax.send({
 			} else {
 				callback(this.response, this.status);
 			}
+		}
+		if (promise){
+			return new Promise(function(resolve, reject){
+				callback = function(response, status){
+					return resolve(response, status);
+				}
+				//add reject handleing
+			});
 		}
 	};
 
