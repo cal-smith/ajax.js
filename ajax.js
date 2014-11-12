@@ -3,11 +3,11 @@ ajax.js
 
 ajax.send(args, callback)
 
-ajax.verb|verbJSON('url', callback(data))
+ajax.verb|verbJSON("url", callback(data))
 
-ajax.verb|verbJSON('url', {args}, callback(data))
+ajax.verb|verbJSON("url", {args}, callback(data))
 
-ajax.verb|verbJSON('url')
+ajax.verb|verbJSON("url")
 	.vars({url:vars})
 	.json(true|false)
 	.headers({req:headers})
@@ -43,7 +43,7 @@ ajax.send({
 */
 
 (function(window){
-	'use strict';
+	"use strict";
 	//add responseType arg setting
 	//needs jsonp handling, proper post handling(?)
 	var Ajax = function(){};
@@ -57,19 +57,19 @@ ajax.send({
 	}
 
 	Ajax.prototype.send = function(args, callback){
-		if (typeof args === 'function') {
+		if (typeof args === "function") {
 			callback = args;
 			args.verb = this.verb;
 			args.url_var = this.url_var;
 			args.url = this.url;
 			args.json = this.parse_json;
-			typeof this.set_headers !== 'undefined' && (args.headers = this.set_headers);
-			typeof this.progress_callback !== 'undefined' && (args.progress = this.progress_callback);
-			typeof this.error_callback !== 'undefined' && (args.error = this.error_callback);
+			args.headers = this.set_headers;
+			args.progress = this.progress_callback;
+			args.error = this.error_callback;
 		}
 
 		//default to current page if no url is specified
-		typeof args.url === 'undefined' && (args.url = window.location.href);
+		typeof args.url === "undefined" && (args.url = window.location.href);
 		//truthy && dothings() is like if(truthy){ dothings() }
 
 		if (typeof args === "undefined" || typeof callback === "undefined"){
@@ -78,7 +78,7 @@ ajax.send({
 		} else{
 			typeof args.json === "undefined" && (args.json = false);
 			if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
-				args.verb = 'get';//default to a GET request
+				args.verb = "get";//default to a GET request
 			}
 		}
 
@@ -131,17 +131,17 @@ ajax.send({
 
 	//helps us make helper functions... yay!
 	function helperhelper(thisarg, json, verb, url, args, callback){
-		if (typeof args === 'undefined' && typeof callback === 'undefined') {
+		if (typeof args === "undefined" && typeof callback === "undefined") {
 			thisarg.verb = verb;
 			thisarg.parse_json = json;
-			typeof url === 'undefined' ? thisarg.url=window.location.href : thisarg.url = url;
+			typeof url === "undefined" ? thisarg.url=window.location.href : thisarg.url = url;
 			return thisarg;
 		} else {
 			typeof args === "function" && (callback = args);
-			if (typeof url === 'object') {
+			if (typeof url === "object") {
 				args = url;
 			} else {
-				typeof url === 'undefined' ? args.url=window.location.href : args.url = url;
+				typeof url === "undefined" ? args.url=window.location.href : args.url = url;
 			}
 			args.verb = verb;
 			args.json = json;
