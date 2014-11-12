@@ -29,7 +29,7 @@ ajax.verb|verbJSON('url', {args}, callback(data))
 
 //method chaining style, everything supported in the args object is aliased as a function
 ajax.verb|verbJSON('url')
-	.var({url:vars})
+	.vars({url:vars})
 	.json(true|false)
 	.headers({req:headers})
 	.progress(function(event))
@@ -69,7 +69,7 @@ ajax.get("your.url.com").send(function(data){
 });
 
 ajax.get("your.url.com")
-	.var({url:var})
+	.vars({url:var})
 	.json()//enables JSON parsing, optionally takes true|false as an argument
 	.progress(function(event){
 		//progress event

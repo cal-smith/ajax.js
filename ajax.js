@@ -8,7 +8,7 @@ ajax.verb|verbJSON('url', callback(data))
 ajax.verb|verbJSON('url', {args}, callback(data))
 
 ajax.verb|verbJSON('url')
-	.var({url:vars})
+	.vars({url:vars})
 	.json(true|false)
 	.headers({req:headers})
 	.progress(function(event))
@@ -60,6 +60,7 @@ ajax.send({
 		if (typeof args === 'function') {
 			callback = args;
 			args.verb = this.verb;
+			args.url_var = this.url_var;
 			args.url = this.url;
 			args.json = this.parse_json;
 			typeof this.set_headers !== 'undefined' && (args.headers = this.set_headers);
@@ -83,7 +84,7 @@ ajax.send({
 
 		//set url vars
 		if (typeof args.url_var !== "undefined"){
-			var parts = args.url_var || this.url_var;
+			var parts = args.url_var;
 			args.url_var = "?";
 			for (var i = 0; i < Object.keys(parts).length; i++) {
 				var k = Object.keys(parts)[i];
@@ -158,7 +159,7 @@ ajax.send({
 	Ajax.prototype.putJSON = function(url, args, callback) { return helperhelper(this, true, "put" , url, args, callback); };
 	Ajax.prototype.deleteJSON = function(url, args, callback) { return helperhelper(this, true, "delete" , url, args, callback); };
 
-	Ajax.prototype.var = function(vars){
+	Ajax.prototype.vars = function(vars){
 		//object of url vars
 		this.url_var = vars;
 		return this;
