@@ -59,7 +59,7 @@ ajax.send({
 	}
 
 	Ajax.prototype.send = function(args, callback){
-		var promise = (typeof args === "undefined" && typeof callback === "undefined")?true:false;
+		var promise = (typeof args === "undefined" && typeof callback === "undefined")?true:false;//allow args to be an object and callback to be undef for promises
 		if (typeof args === "function" || (typeof args === "undefined" && typeof callback === "undefined")) {
 			if (typeof args === "function") { callback = args };
 			if (typeof args === "undefined") { args = {}; }
@@ -145,7 +145,7 @@ ajax.send({
 			typeof url === "undefined" ? thisarg.url=window.location.href : thisarg.url = url;
 			return thisarg;
 		} else {
-			typeof args === "function" && (callback = args);
+			typeof args === "function" && (callback = args);//something something this will blow up promises
 			if (typeof url === "object") {
 				args = url;
 			} else {
