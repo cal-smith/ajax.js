@@ -59,17 +59,17 @@ ajax.send({
 	}
 
 	Ajax.prototype.send = function(args, callback){
-		var promise = (typeof args === "undefined" && typeof callback === "undefined")?true:false;//allow args to be an object and callback to be undef for promises
-		if (typeof args === "function" || (typeof args === "undefined" && typeof callback === "undefined")) {
-			if (typeof args === "function") { callback = args };
+		var promise = ((typeof args === "object" || typeof args === "undefined") && typeof callback === "undefined")?true:false;
+		if (typeof args === "function" || ((typeof args === "object" || typeof args === "undefined") && typeof callback === "undefined")) {
+			if (typeof args === "function") { callback = args; };
 			if (typeof args === "undefined") { args = {}; }
-			args.verb = this.verb;
-			args.url_var = this.url_var;
-			args.url = this.url;
-			args.json = this.parse_json;
-			args.headers = this.set_headers;
-			args.progress = this.progress_callback;
-			args.error = this.error_callback;
+			typeof args.verb === "undefined" && (args.verb = this.verb);
+			typeof args.url_var === "undefined" && (args.url_var = this.url_var);
+			typeof args.url === "undefined" && (args.url = this.url);
+			typeof args.json === "undefined" && (args.json = this.parse_json);
+			typeof args.headers === "undefined" && (args.headers = this.set_headers);
+			typeof args.progress === "undefined" && (args.progress = this.progress_callback);
+			typeof args.error === "undefined" && (args.error = this.error_callback);
 		}
 
 		//default to current page if no url is specified
@@ -139,18 +139,18 @@ ajax.send({
 
 	//helps us make helper functions... yay!
 	function helperhelper(thisarg, json, verb, url, args, callback){
-		if (typeof args === "undefined" && typeof callback === "undefined") {
+		if (typeof args === "object" || typeof args === "undefined" && typeof callback === "undefined") {
+			thisarg.url = url;
 			thisarg.verb = verb;
 			thisarg.parse_json = json;
-			typeof url === "undefined" ? thisarg.url=window.location.href : thisarg.url = url;
 			return thisarg;
 		} else {
-			typeof args === "function" && (callback = args);//something something this will blow up promises
-			if (typeof url === "object") {
-				args = url;
-			} else {
-				typeof url === "undefined" ? args.url=window.location.href : args.url = url;
+			if (typeof args === "function") {
+				callback = args;
+				args = {};
 			}
+			typeof url === "object"?args = url:
+			args.url = url;
 			args.verb = verb;
 			args.json = json;
 			return Ajax.prototype.send(args, callback);
