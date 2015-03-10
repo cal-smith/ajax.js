@@ -81,4 +81,13 @@ ajax.get("your.url.com")
 	.send(function(data){
 		console.log(data);
 	});
+
+//promises
+ajax.get("your.url.com").send()
+	.then(function(data){
+		console.log("resolved:", data)
+	},
+	function(error){
+		//reject
+	});
 ```
