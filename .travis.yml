@@ -1,9 +1,10 @@
-install: "npm install uglify-js"
-script: "ruby build.rb"
+install: npm install uglify-js
+script: ruby build.rb
 deploy:
   provider: releases
-  api-key: ""
-  file: "ajax.min.js"
+  api_key:
+    secure: SsQGdO6pv31LFG1vqRAUC1Jdle5A8bkx6Gbigcdt9OAb5/G8C7PxhC6HFZ4pJk41ACUCL0FmPzcawXUVvvUgCfMh9eCwXwmkp1l6oiUkrjiiiQuJGgfbMpSchBeZS5E27QzZ0SL6OOiLIc0Tc4ELRJcSszFh+F0TIgcKGdZT7O0=
+  file: 'ajax.min.js'
   skip_cleanup: true
   on:
     tags: true

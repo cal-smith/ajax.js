@@ -2,7 +2,7 @@ ajax.js
 ===========
 
 ajax.js is intented to be a nice lightweight AJAX library.  
-Unminified the library is 5kb, minification takes it down to ~3kb.
+Unminified the library is 6kb, minification takes it down to ~3kb.
 
 #Usage:
 ```javascript
@@ -21,7 +21,8 @@ args = {
 //basic send method
 ajax.send({args}, callback)
 
-//the four HTTP verbs are aliased as helper functions the verbJSON variants expect a JSON formatted response
+//The four HTTP verbs are aliased as helper functions 
+//The verbJSON variants expect a JSON formatted response
 ajax.verb|verbJSON('url', callback(data))
 
 //also with optional args object

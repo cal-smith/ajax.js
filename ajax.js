@@ -44,19 +44,9 @@ ajax.send({
 
 (function(window){
 	"use strict";
-	//add responseType arg setting
-	//needs jsonp handling, proper post handling(?)
 	var Ajax = function(){
 		
 	};
-
-	function makeXHR(){//this should let IE have properish suport
-		if (!window.XMLHttpRequest) {
-			return new window.ActiveXObject("Microsoft.XMLHTTP");
-		} else if (window.XMLHttpRequest) {//for normal browsers
-			return new XMLHttpRequest();
-		}
-	}
 
 	Ajax.prototype.send = function(args, callback){
 		var promise = ((typeof args === "object" || typeof args === "undefined") && typeof callback === "undefined")?true:false;
@@ -85,9 +75,10 @@ ajax.send({
 		if (typeof args.url_var !== "undefined"){
 			var parts = args.url_var;
 			args.url_var = "?";
-			for (var i = 0; i < Object.keys(parts).length; i++) {
-				var k = Object.keys(parts)[i];
-				var v = parts[Object.keys(parts)[i]];
+			var keys = Object.keys(parts);
+			for (var i = 0; i < keys.length; i++) {
+				var k = keys[i];
+				var v = parts[keys[i]];
 				if (i === 0) {
 					args.url_var += encodeURI(k) + "=" + encodeURI(v);
 				} else {
@@ -97,9 +88,7 @@ ajax.send({
 			args.url += args.url_var;
 		}
 
-		//add http:// to url if ommited?
-
-		var req = makeXHR();
+		var req = new XMLHttpRequest();
 
 		//Bind event listeners
 		if(typeof args.progress !== "undefined"){//adds progress listener
@@ -112,14 +101,15 @@ ajax.send({
 		
 		req.open(args.verb, args.url);
 		if(typeof args.headers !== "undefined"){//sets headers
-			args.headers.forEach(function(value, key){
-				req.setRequestHeader(key, value);
-			});
+			var keys = Object.keys(args.headers);
+			for (var i = 0; i < keys.length; i++) {
+				req.setRequestHeader(keys[i], args.headers[keys[i]]);
+			}
 		}
 		
 		req.onload = res;
-		req.send();//sends the request
-		function res(){//callback function
+		req.send();
+		function res(){
 			if (args.json === true){
 				callback(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
 			} else {
