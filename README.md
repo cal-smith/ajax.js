@@ -7,7 +7,7 @@ Unminified the library is 3kb, minification takes it down to ~2kb.
 #Usage:
 ```javascript
 
-//basic useage method
+//basic usage
 ajax(url).send(callback(data, status, headers));
 
 //avliable options
