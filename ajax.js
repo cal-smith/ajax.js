@@ -1,176 +1,94 @@
-/*
-ajax.js
-
-ajax.send(args, callback)
-
-ajax.verb|verbJSON("url", callback(data))
-
-ajax.verb|verbJSON("url", {args}, callback(data))
-
-ajax.verb|verbJSON("url")
-	.vars({url:vars})
-	.json(true|false)
-	.headers({req:headers})
-	.progress(function(event))
-	.error(function(event))
-	.send(callback(data))
-
-args = {
-	verb:"GET|POST|PUT|DELETE", //defaults to GET
-	url: "http://url.com",
-	url_var:{"key":"value"},
-	headers:{"key":"value"},
-	json: true|false,
-	progress: function(event),
-	error: function(event)
-}
-
-ajax.send({
-	verb:"GET",
-	url: "your.url.com",
-	url_var:{"key":"value"},
-	headers:{"key":"value"},
-	json: true,
-	progress: function(event){
-		//event handle
-	},
-	error: function(event){
-		//event handle
-	}
-}, function(data){
-	console.log(data);
-});
-*/
-
 (function(window){
 	"use strict";
-	var Ajax = function(){
-		
+	var Ajax = function(url){
+		this.url = url;
+		return this;
 	};
 
-	Ajax.prototype.send = function(args, callback){
-		var promise = ((typeof args === "object" || typeof args === "undefined") && typeof callback === "undefined")?true:false;
-		if (typeof args === "function" || ((typeof args === "object" || typeof args === "undefined") && typeof callback === "undefined")) {
-			if (typeof args === "function") { callback = args; };
-			if (typeof args === "undefined") { args = {}; }
-			typeof args.verb === "undefined" && (args.verb = this.verb);
-			typeof args.url_var === "undefined" && (args.url_var = this.url_var);
-			typeof args.url === "undefined" && (args.url = this.url);
-			typeof args.json === "undefined" && (args.json = this.parse_json);
-			typeof args.headers === "undefined" && (args.headers = this.set_headers);
-			typeof args.progress === "undefined" && (args.progress = this.progress_callback);
-			typeof args.error === "undefined" && (args.error = this.error_callback);
-		}
+	Ajax.prototype.send = function(callback){
+		var promise = (typeof callback === "undefined")?true:false;
 
 		//default to current page if no url is specified
-		typeof args.url === "undefined" && (args.url = window.location.href);
-		//truthy && dothings() is like if(truthy){ dothings() }
+		typeof this.url === "undefined" && (this.url = window.location.href);
 
-		typeof args.json === "undefined" && (args.json = false);
-		if (typeof args.verb === "undefined" || !args.verb.match(/^(get|post|put|delete)$/i)){
-			args.verb = "get";//default to a GET request
+		typeof this.parse_json === "undefined" && (this.parse_json = false);
+		if (typeof this.verb === "undefined" || !this.verb.match(/^(get|post|put|delete)$/i)){
+			this.verb = "get";
 		}
 
-		//set url vars
-		if (typeof args.url_var !== "undefined"){
-			var parts = args.url_var;
-			args.url_var = "?";
+		if (typeof this.url_var !== "undefined"){
+			var parts = this.url_var;
+			this.url_var = "?";
 			var keys = Object.keys(parts);
 			for (var i = 0; i < keys.length; i++) {
 				var k = keys[i];
 				var v = parts[keys[i]];
 				if (i === 0) {
-					args.url_var += encodeURI(k) + "=" + encodeURI(v);
+					this.url_var += encodeURI(k) + "=" + encodeURI(v);
 				} else {
-					args.url_var += "&" + encodeURI(k) + "=" + encodeURI(v);
+					this.url_var += "&" + encodeURI(k) + "=" + encodeURI(v);
 				}
 			}
-			args.url += args.url_var;
+			this.url += this.url_var;
 		}
 
 		var req = new XMLHttpRequest();
 
 		//Bind event listeners
-		if(typeof args.progress !== "undefined"){//adds progress listener
-			req.addEventListener("progress", args.progress, false);
+		if(typeof this.progress !== "undefined"){
+			req.addEventListener("progress", this.progress, false);
 		}
 
-		if(typeof args.error !== "undefined"){//adds error listener
-			req.addEventListener("error", args.error, false);
+		if(typeof this.error !== "undefined"){
+			req.addEventListener("error", this.error, false);
 		}
 		
-		req.open(args.verb, args.url);
-		if(typeof args.headers !== "undefined"){//sets headers
-			var keys = Object.keys(args.headers);
+		req.open(this.verb, this.url);
+		if(typeof this.headers !== "undefined"){
+			var keys = Object.keys(this.headers);
 			for (var i = 0; i < keys.length; i++) {
-				req.setRequestHeader(keys[i], args.headers[keys[i]]);
+				req.setRequestHeader(keys[i], this.headers[keys[i]]);
 			}
 		}
-		
-		req.onload = res;
-		req.send();
-		function res(){
-			if (args.json === true){
-				callback(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
-			} else {
-				callback(this.response, this.status, this.getAllResponseHeaders());
-			}
-		}
+		var parse_json = this.parse_json;
 		if (promise){
 			return new Promise(function(resolve, reject){
-				callback = function(response){
-					return resolve(response);
+				req.onload = function() {
+					//on error - reject
+					if (parse_json === true){
+						return resolve(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
+					} else {
+						return resolve(this.response, this.status, this.getAllResponseHeaders());
+					}
 				};
-
-				req.addEventListener("error", reject, false);
+				req.onerror = function() {
+					return reject(this.error_callback);
+				};
+				req.send();
 			});
+		} else {
+			req.onload = function(){
+				if (parse_json === true){
+					callback(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
+				} else {
+					callback(this.response, this.status, this.getAllResponseHeaders());
+				}
+			};
+			req.send();
 		}
 	};
 
-	//helps us make helper functions... yay!
-	function helperhelper(thisarg, json, verb, url, args, callback){
-		if (typeof args === "object" || typeof args === "undefined" && typeof callback === "undefined") {
-			thisarg.url = url;
-			thisarg.verb = verb;
-			thisarg.parse_json = json;
-			return thisarg;
-		} else {
-			if (typeof args === "function") {
-				callback = args;
-				args = {};
-			}
-			typeof url === "object"?args = url:
-			args.url = url;
-			args.verb = verb;
-			args.json = json;
-			return Ajax.prototype.send(args, callback);
-		}
-	}
-
-	//nice big block of method defs.
-	Ajax.prototype.post = function(url, args, callback) { return helperhelper(this, false, "post" , url, args, callback); };
-	Ajax.prototype.get = function(url, args, callback) { return helperhelper(this, false, "get" , url, args, callback); };
-	Ajax.prototype.put = function(url, args, callback) { return helperhelper(this, false, "put" , url, args, callback); };
-	Ajax.prototype.delete = function(url, args, callback) { return helperhelper(this, false, "delete" , url, args, callback); };
-	Ajax.prototype.postJSON = function(url, args, callback) { return helperhelper(this, true, "post" , url, args, callback); };
-	Ajax.prototype.getJSON = function(url, args, callback) { return helperhelper(this, true, "get" , url, args, callback); };
-	Ajax.prototype.putJSON = function(url, args, callback) { return helperhelper(this, true, "put" , url, args, callback); };
-	Ajax.prototype.deleteJSON = function(url, args, callback) { return helperhelper(this, true, "delete" , url, args, callback); };
-
 	Ajax.prototype.vars = function(vars){
-		//object of url vars
 		this.url_var = vars;
 		return this;
 	};
 
 	Ajax.prototype.json = function(json){
-		//true|false for json parsing
-		typeof(json === "undefined") ? this.parse_json = true : this.parse_json = json;
+		this.parse_json = typeof(json === "undefined")?true:json;
 		return this;
 	};
 
 	Ajax.prototype.headers = function(headers){
-		//headers
 		this.set_headers = headers;
 		return this;
 	};
@@ -186,10 +104,8 @@ ajax.send({
 	};
 
 	if (typeof window.ajax === "undefined") {
-		Object.defineProperty(window, "ajax", {
-			get: function(){
-				return new Ajax();
-			}
-		});
+		window.ajax = function(url) {
+			return new Ajax(url);
+		}
 	}
 })(window);
