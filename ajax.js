@@ -1,6 +1,7 @@
 (function(window){
 	"use strict";
-	var Ajax = function(url){
+	var Ajax = function(url, verb){
+		this.req_verb = verb;
 		this.url = url;
 		return this;
 	};
@@ -12,8 +13,9 @@
 		typeof this.url === "undefined" && (this.url = window.location.href);
 
 		typeof this.parse_json === "undefined" && (this.parse_json = false);
-		if (typeof this.verb === "undefined" || !this.verb.match(/^(get|post|put|delete)$/i)){
-			this.verb = "get";
+
+		if (typeof this.req_verb === "undefined" || !this.req_verb.match(/^(get|post|put|delete)$/i)){
+			this.req_verb = "get";
 		}
 
 		if (typeof this.url_var !== "undefined"){
@@ -43,7 +45,7 @@
 			req.addEventListener("error", this.error, false);
 		}
 		
-		req.open(this.verb, this.url);
+		req.open(this.req_verb, this.url);
 		if(typeof this.headers !== "undefined"){
 			var keys = Object.keys(this.headers);
 			for (var i = 0; i < keys.length; i++) {
@@ -78,6 +80,11 @@
 		}
 	};
 
+	Ajax.prototype.verb = function(verb){
+		this.req_verb = verb;
+		return this;
+	};
+
 	Ajax.prototype.vars = function(vars){
 		this.url_var = vars;
 		return this;
@@ -104,8 +111,8 @@
 	};
 
 	if (typeof window.ajax === "undefined") {
-		window.ajax = function(url) {
-			return new Ajax(url);
+		window.ajax = function(url, verb) {
+			return new Ajax(url, verb);
 		}
 	}
 })(window);

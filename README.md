@@ -11,20 +11,21 @@ Unminified the library is 3kb, minification takes it down to ~2kb.
 ajax(url).send(callback(data, status, headers));
 
 //avliable options
-ajax('url')
+ajax('url', 'get|post|put|delete')
+	.verb('get|post|put|delete')
 	.vars({url:vars})
 	.json(true|false)
 	.headers({req:headers})
 	.progress(function(event))
 	.error(function(event))
-	.send(callback(data))
+	.send(callback(data));
 
-//example
-ajax.get("http://your.url.com").send(function(data){
+//examples//
+ajax('http://your.url.com', 'get').send(function(data){
 	console.log(data);
 });
 
-ajax.get("http://your.url.com")
+ajax('http://your.url.com')
 	.vars({url:var})
 	.json()//enables JSON parsing, optionally takes true|false as an argument
 	.progress(function(event){
@@ -38,7 +39,7 @@ ajax.get("http://your.url.com")
 	});
 
 //promises
-ajax.get("your.url.com").send()
+ajax("your.url.com").send()
 	.then(function(data){
 		//resolve
 	},
