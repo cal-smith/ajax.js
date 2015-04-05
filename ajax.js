@@ -31,7 +31,8 @@
 					}
 				};
 				this.req.onerror = function() {
-					return reject(this.error_callback);
+					//TODO: give reject some kind of error state
+					return reject(this.status);
 				};
 				this.req.send();
 			});
