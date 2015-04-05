@@ -2,21 +2,14 @@
 	"use strict";
 	var Ajax = function(url, verb){
 		this.req = new XMLHttpRequest();
-		this.req_verb = verb;
-		this.url = url;
+		this.req_verb = typeof(verb ==== "undefined")?"get":verb;
+		this.url = typeof(url === "undefined")?window.location.href:url;
 		this.parse_json = false;
 		return this;
 	};
 
 	Ajax.prototype.send = function(callback){
 		var promise = (typeof callback === "undefined")?true:false;
-
-		//default to current page if no url is specified
-		typeof this.url === "undefined" && (this.url = window.location.href);
-
-		if (typeof this.req_verb === "undefined" || !this.req_verb.match(/^(get|post|put|delete)$/i)){
-			this.req_verb = "get";
-		}
 
 		this.req.open(this.req_verb, this.url);
 		/*this has to be here, because it can only be called after open() is called*/
@@ -54,8 +47,23 @@
 		}
 	};
 
-	Ajax.prototype.verb = function(verb){
-		this.req_verb = verb;
+	Ajax.prototype.get = function(){
+		this.req_verb = "get";
+		return this;
+	};
+
+	Ajax.prototype.post = function(){
+		this.req_verb = "post";
+		return this;
+	};
+
+	Ajax.prototype.put = function(){
+		this.req_verb = "put";
+		return this;
+	};
+
+	Ajax.prototype.delete = function(){
+		this.req_verb = "delete";
 		return this;
 	};
 
