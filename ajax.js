@@ -12,6 +12,7 @@
 		var promise = (typeof callback === "undefined")?true:false;
 
 		this.req.open(this.req_verb, this.url);
+		
 		/*this has to be here, because it can only be called after open() is called*/
 		if(typeof this.headers !== "undefined"){
 			var keys = Object.keys(this.headers);
