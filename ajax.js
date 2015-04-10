@@ -15,34 +15,36 @@
 		
 		/*this has to be here, because it can only be called after open() is called*/
 		if(typeof this.headers !== "undefined"){
-			var keys = Object.keys(this.headers);
-			for (var i = 0; i < keys.length; i++) {
-				this.req.setRequestHeader(keys[i], this.headers[keys[i]]);
+			for (var key in this.headers) {
+				this.req.setRequestHeader(key, this.headers.key);
 			}
 		}
 		var parse_json = this.parse_json;
 		if (promise){
 			return new Promise(function(resolve, reject){
 				this.req.onload = function() {
-					//on error - reject
+					//IE9 doesn't support the .response property
+					var res = (typeof this.response === "undefined")?this.responseText:this.response;
 					if (parse_json === true){
-						return resolve(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
+						return resolve(JSON.parse(res), this.status, this.getAllResponseHeaders());
 					} else {
-						return resolve(this.response, this.status, this.getAllResponseHeaders());
+						return resolve(res, this.status, this.getAllResponseHeaders());
 					}
 				};
 				this.req.onerror = function() {
-					//TODO: give reject some kind of error state
+					//TODO: give reject some better kind of error state(?)
 					return reject(this.status);
 				};
 				this.req.send();
 			});
 		} else {
 			this.req.onload = function(){
+				//IE9 doesn't support the .response property
+				var res = (typeof this.response === "undefined")?this.responseText:this.response;
 				if (parse_json === true){
-					callback(JSON.parse(this.response), this.status, this.getAllResponseHeaders());
+					callback(JSON.parse(res), this.status, this.getAllResponseHeaders());
 				} else {
-					callback(this.response, this.status, this.getAllResponseHeaders());
+					callback(res, this.status, this.getAllResponseHeaders());
 				}
 			};
 			this.req.send();
@@ -64,24 +66,19 @@
 		return this;
 	};
 
-	Ajax.prototype.delete = function(){
+	//fix because IE8 won't parse this correctly
+	//additionally,  I doubt this method would work at all in IE8
+	Ajax.prototype["delete"] = function(){
 		this.req_verb = "delete";
 		return this;
 	};
 
 	Ajax.prototype.vars = function(vars){
 		this.url_var = "";
-		var keys = Object.keys(vars);
-		for (var i = 0; i < keys.length; i++) {
-			var k = keys[i];
-			var v = vars[keys[i]];
-			if (i === 0) {
-				this.url_var += encodeURI(k) + "=" + encodeURI(v);
-			} else {
-				this.url_var += "&" + encodeURI(k) + "=" + encodeURI(v);
-			}
+		for (var key in vars) {
+			this.url_var += "&" + encodeURIComponent(key) + "=" + encodeURIComponent(vars.key);
 		}
-		this.url += "?" + this.url_var;
+		this.url += "?" + this.url_var.slice(1);
 		return this;
 	};
 

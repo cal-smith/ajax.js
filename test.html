@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<script type="text/javascript" src="ajax.js"></script>
@@ -16,8 +17,21 @@
 		console.log("progress callback", this.progress_callback, "expecting: undefined", this.progress_callback == null);
 		console.log("error callback", this.error_callback, "expecting: undefined", this.error_callback == null);
 		
-	}
-	a.vars({one:"1", two:"2"}).json(false).headers(headers).send()
+	};
+	a.vars({one:"1", two:"2"}).json(false).headers(headers).send();
+	console.log("\n");
+	var b = ajax();
+	b.send = function (argument) {
+		console.log("url", this.url, "expecting: " + window.location.href, this.url === window.location.href);
+		console.log("verb", this.req_verb, "expecting: get", this.req_verb === "get");
+		console.log("vars", this.url_var, "expecting: undefined", this.url_var == null);
+		console.log("json", this.parse_json, "expecting: false", this.parse_json === false);
+		console.log("headers", this.set_headers, "expecting undefined", this.set_headers == null);
+		console.log("progress callback", this.progress_callback, "expecting: undefined", this.progress_callback == null);
+		console.log("error callback", this.error_callback, "expecting: undefined", this.error_callback == null);
+		
+	};
+	b.get().send();
 	</script>
 </body>
 </html>
