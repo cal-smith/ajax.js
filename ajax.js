@@ -2,8 +2,8 @@
 	"use strict";
 	var Ajax = function(url, verb){
 		this.req = new XMLHttpRequest();
-		this.req_verb = typeof(verb ==== "undefined")?"get":verb;
-		this.url = typeof(url === "undefined")?window.location.href:url;
+		this.req_verb = (typeof verb === "undefined")?"get":verb;
+		this.url = (typeof url === "undefined")?window.location.href:url;
 		this.parse_json = false;
 		return this;
 	};
@@ -70,7 +70,7 @@
 	};
 
 	Ajax.prototype.vars = function(vars){
-		var parts = "?";
+		this.url_var = "";
 		var keys = Object.keys(vars);
 		for (var i = 0; i < keys.length; i++) {
 			var k = keys[i];
@@ -81,12 +81,12 @@
 				this.url_var += "&" + encodeURI(k) + "=" + encodeURI(v);
 			}
 		}
-		this.url += parts;
+		this.url += "?" + this.url_var;
 		return this;
 	};
 
 	Ajax.prototype.json = function(json){
-		this.parse_json = typeof(json === "undefined")?true:json;
+		this.parse_json = (typeof json === "undefined")?true:json;
 		return this;
 	};
 

@@ -1,8 +1,23 @@
 <html>
 <head>
 	<script type="text/javascript" src="ajax.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
-	
+	<script type="text/javascript">
+	var a = ajax("http://some.url", "post");
+	var headers = {some:"header"};
+	a.send = function (argument) {
+		console.log("url", this.url, "expecting: http://some.url?one=1&two=2", this.url === "http://some.url?one=1&two=2");
+		console.log("verb", this.req_verb, "expecting: post", this.req_verb === "post");
+		console.log("vars", this.url_var, "expecting: one=1&two=2", this.url_var === "one=1&two=2");
+		console.log("json", this.parse_json, "expecting: false", this.parse_json === false);
+		console.log("headers", this.set_headers, "expecting {some:'header'}", this.set_headers === headers);
+		console.log("progress callback", this.progress_callback, "expecting: undefined", this.progress_callback == null);
+		console.log("error callback", this.error_callback, "expecting: undefined", this.error_callback == null);
+		
+	}
+	a.vars({one:"1", two:"2"}).json(false).headers(headers).send()
+	</script>
 </body>
 </html>
