@@ -14,9 +14,10 @@
 		this.req.open(this.req_verb, this.url);
 		
 		/*this has to be here, because it can only be called after open() is called*/
-		if(typeof this.headers !== "undefined"){
-			for (var key in this.headers) {
-				this.req.setRequestHeader(key, this.headers.key);
+		if(typeof this.set_headers !== "undefined"){
+			var keys = Object.keys(this.set_headers);
+			for (var i = 0; i < keys.length; i++) {
+				this.req.setRequestHeader(keys[i], this.set_headers[key[i]]);
 			}
 		}
 		var parse_json = this.parse_json;
@@ -75,8 +76,9 @@
 
 	Ajax.prototype.vars = function(vars){
 		this.url_var = "";
-		for (var key in vars) {
-			this.url_var += "&" + encodeURIComponent(key) + "=" + encodeURIComponent(vars.key);
+		var keys = Object.keys(vars);
+		for (var i = 0; i < keys.length; i++) {
+			this.url_var += "&" + encodeURIComponent(keys[i]) + "=" + encodeURIComponent(vars[keys[i]]);
 		}
 		this.url += "?" + this.url_var.slice(1);
 		return this;

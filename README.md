@@ -12,7 +12,10 @@ ajax(url).send(callback(data, status, headers));
 
 //avliable options
 ajax('url', 'get|post|put|delete')
-	.verb('get|post|put|delete')
+	.get()
+	.put()
+	.post()
+	.delete()
 	.vars({url:vars})
 	.json(true|false)
 	.headers({req:headers})

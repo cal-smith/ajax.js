@@ -20,6 +20,7 @@
 	};
 	a.vars({one:"1", two:"2"}).json(false).headers(headers).send();
 	console.log("\n");
+	
 	var b = ajax();
 	b.send = function (argument) {
 		console.log("url", this.url, "expecting: " + window.location.href, this.url === window.location.href);
