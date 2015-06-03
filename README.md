@@ -6,10 +6,10 @@ Unminified the library is 3kb, minification takes it down to ~2kb.
 
 #About
 
-ajax.js supports CommonJS/AMD and will fallback to declaring a single ajax function on window.
+ajax.js supports CommonJS/AMD and will fallback to declaring a single ajax function on window.  
 We support all evergreen browsers and IE 10+.
 
-"But why not use/polyfill `fetch()`? why not jQuery?"  
+#####"But why not use/polyfill `fetch()`? why not jQuery?"  
 ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly.
 
 `fetch()` is great and generally does fill much of the same role ajax.js was created to fill, however ajax.js brings more to the table as an abstraction of XMLHttpRequest.
