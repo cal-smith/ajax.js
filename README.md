@@ -7,7 +7,7 @@ Unminified the library is 3kb, minification takes it down to ~2kb.
 ajax.js supports CommonJS/AMD and will fallback to declaring a single ajax function on window.
 We support all evergreen browsers and IE 10+.
 
-"but why not use/polyfill `fetch()`? why not jQuery?"
+"But why not use/polyfill `fetch()`? why not jQuery?"  
 ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly.
 
 `fetch()` is great and generally does fill much of the same role ajax.js was created to fill, however ajax.js brings more to the table as an abstraction of XMLHttpRequest.
@@ -56,7 +56,7 @@ ajax('url', 'get|post|put|delete')
 ```
 
 ###.send(function)
-Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.
+Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.  
 This is the only non-optional 'option', and doesn't return `this`.
 
 ###.vars(object)
