@@ -44,12 +44,12 @@
 		log("verb", this.req_verb, "get", this.req_verb === "get");
 		log("vars", this.url_var, "undefined", this.url_var == null);
 		log("json", this.parse_json, "false", this.parse_json === false);
-		log("headers", this.set_headers, "ndefined", this.set_headers == null);
+		log("headers", this.set_headers, "undefined", this.set_headers == null);
 		log("progress callback", this.progress_callback, "undefined", this.progress_callback == null);
 		log("error callback", this.error_callback, "undefined", this.error_callback == null);
 		
 	};
-	b.get().send();
+	b.send();
 	</script>
 </body>
 </html>

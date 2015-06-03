@@ -55,28 +55,6 @@
 		}
 	};
 
-	Ajax.prototype.get = function(){
-		this.req_verb = "get";
-		return this;
-	};
-
-	Ajax.prototype.post = function(){
-		this.req_verb = "post";
-		return this;
-	};
-
-	Ajax.prototype.put = function(){
-		this.req_verb = "put";
-		return this;
-	};
-
-	//fix because IE8 won't parse this correctly
-	//additionally,  I doubt this method would work at all in IE8
-	Ajax.prototype["delete"] = function(){
-		this.req_verb = "delete";
-		return this;
-	};
-
 	Ajax.prototype.vars = function(vars){
 		this.url_var = "";
 		var keys = Object.keys(vars);
