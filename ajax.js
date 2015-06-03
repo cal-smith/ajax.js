@@ -1,9 +1,12 @@
-(function(window){
+(function(){
 	"use strict";
+
+	var global = typeof self === "object"?self:global;
+
 	var Ajax = function(url, verb){
 		this.req = new XMLHttpRequest();
 		this.req_verb = (typeof verb === "undefined")?"get":verb;
-		this.url = (typeof url === "undefined")?window.location.href:url;
+		this.url = (typeof url === "undefined")?global.location.href:url;
 		this.parse_json = false;
 		return this;
 	};
@@ -33,7 +36,7 @@
 					}
 				};
 				this.req.onerror = function() {
-					//TODO: give reject some better kind of error state(?)
+					//TODO: more info to reject than just the status?
 					return reject(this.status);
 				};
 				this.req.send();
@@ -78,9 +81,10 @@
 		this.url_var = "";
 		var keys = Object.keys(vars);
 		for (var i = 0; i < keys.length; i++) {
-			this.url_var += "&" + encodeURIComponent(keys[i]) + "=" + encodeURIComponent(vars[keys[i]]);
+			if (i > 0) this.url_var += "&";
+			this.url_var += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(vars[keys[i]]);
 		}
-		this.url += "?" + this.url_var.slice(1);
+		this.url += "?" + this.url_var;
 		return this;
 	};
 
@@ -104,9 +108,26 @@
 		return this;
 	};
 
-	if (typeof window.ajax === "undefined") {
-		window.ajax = function(url, verb) {
+	//export as a commonjs compatible module, or as a global function in the browser
+	if (typeof module !== "undefined" && module.exports) {
+		module.exports = function(url, verb) {
 			return new Ajax(url, verb);
 		}
+	} else {
+		if (typeof global.ajax === "undefined") {
+			global.ajax = function(url, verb) {
+				return new Ajax(url, verb);
+			}
+		}
 	}
-})(window);
+
+	//also export for AMDjs
+	if (typeof define === "function" && define.amd) {
+		define({
+			ajax: function(url, verb) {
+				return new Ajax(url, verb);
+			}
+		});
+	}
+
+})();
