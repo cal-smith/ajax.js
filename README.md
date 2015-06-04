@@ -1,7 +1,7 @@
 ajax.js
 ===========
 
-ajax.js is intended to be a nice lightweight AJAX library.  
+ajax.js is intended to be a nice, lightweight, AJAX library.  
 Unminified the library is 3kb, minification takes it down to ~2kb.
 
 #About
@@ -10,9 +10,7 @@ ajax.js supports CommonJS/AMD and will fall back to declaring a single global aj
 We support all evergreen browsers and IE 10+.
 
 #####"But why not use/polyfill `fetch()`? why not jQuery?"  
-ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly.
-
-`fetch()` is great and generally does fill much of the same role ajax.js was created to fill, however ajax.js brings more to the table as an abstraction of XMLHttpRequest.
+ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly. As for `fetch`: use it if you've got it, ajax.js co-exists as different take on a higher level XMLHttpRequest API.
 
 #Usage:
 
@@ -58,29 +56,29 @@ ajax('url', 'get|post|put|delete')
 ```
 
 ###.send(function)
-`.send(function(data, status, headers));`
+`.send(function(data, status, headers));`  
 Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.  
 The callback will be supplied with the response `data`, the resulting `status` code, and string of the received `headers`(an empty string on platforms that don't support getting response headers).
 
 ###.vars(object)
-`.vars({'one':'fish', 'two':'fish', 'red':'fish', 'blue','fish'})`
+`.vars({'one':'fish', 'two':'fish', 'red':'fish', 'blue','fish'})`  
 Expects an object as it's only parameter, which is then converted to a URL variable string. We urlescape the components.
 
 ###.json(boolean)
-`.json()`
+`.json()`  
 When used with no parameters it enables JSON parsing on the request data. When given a boolean it will enable (true) or disable (false) JSON parsing.
 
 ###.headers(object)
-`.headers({'x-some-header':'some-value'})`
+`.headers({'x-some-header':'some-value'})`  
 Expects an object as it's only parameter, which is used to set the request headers.
 
 ###.progress(function)
-`.progress(function(e){ //handle event })`
+`.progress(function(e){ //handle event })`  
 Binds the function to the progress event, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.error(function)
-`.error(function(e){ //handle event })`
+`.error(function(e){ //handle event })`  
 Binds the function to the error event, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.xdr()
-Enables XDomainRequest on IE's that support it, not recommended if you can avoid it. Read [the MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest) and [this IEInternals post](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx) to understand the limitations of XDomainRequest. We don't build the request object using XDomainRequest by default because IE 10 implements XMLHttpRequest correctly while maintaining XDomainRequest for compatibility; It would be a shame to penalize IE 10 by default.
+Enables XDomainRequest on IE's that support it - not recommended if you can avoid it. Read [the MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest) and [this IEInternals post](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx) to understand the limitations of XDomainRequest.
