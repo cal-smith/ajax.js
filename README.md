@@ -58,22 +58,29 @@ ajax('url', 'get|post|put|delete')
 ```
 
 ###.send(function)
-Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.
+`.send(function(data, status, headers));`
+Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.  
+The callback will be supplied with the response `data`, the resulting `status` code, and string of the received `headers`(an empty string on platforms that don't support getting response headers).
 
 ###.vars(object)
+`.vars({'one':'fish', 'two':'fish', 'red':'fish', 'blue','fish'})`
 Expects an object as it's only parameter, which is then converted to a URL variable string. We urlescape the components.
 
 ###.json(boolean)
+`.json()`
 When used with no parameters it enables JSON parsing on the request data. When given a boolean it will enable (true) or disable (false) JSON parsing.
 
 ###.headers(object)
+`.headers({'x-some-header':'some-value'})`
 Expects an object as it's only parameter, which is used to set the request headers.
 
 ###.progress(function)
-Binds the function to the progress event. See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
+`.progress(function(e){ //handle event })`
+Binds the function to the progress event, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.error(function)
-Binds the function to the error event. See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
+`.error(function(e){ //handle event })`
+Binds the function to the error event, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.xdr()
 Enables XDomainRequest on IE's that support it, not recommended if you can avoid it. Read [the MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest) and [this IEInternals post](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx) to understand the limitations of XDomainRequest. We don't build the request object using XDomainRequest by default because IE 10 implements XMLHttpRequest correctly while maintaining XDomainRequest for compatibility; It would be a shame to penalize IE 10 by default.

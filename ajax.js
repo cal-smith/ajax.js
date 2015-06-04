@@ -29,7 +29,7 @@
 				this.req.onload = function() {
 					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 					var res = (typeof this.response === "undefined")?this.responseText:this.response;
-					var headers = (typeof this.getAllResponseHeaders === "undefined")?{}:this.getAllResponseHeaders();
+					var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
 					if (parse_json === true){
 						return resolve(JSON.parse(res), this.status, this.getAllResponseHeaders());
 					} else {
@@ -46,7 +46,7 @@
 			this.req.onload = function(){
 				//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 				var res = (typeof this.response === "undefined")?this.responseText:this.response;
-				var headers = (typeof this.getAllResponseHeaders === "undefined")?{}:this.getAllResponseHeaders();
+				var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
 				if (parse_json === true){
 					callback(JSON.parse(res), this.status, this.getAllResponseHeaders());
 				} else {
