@@ -13,8 +13,6 @@ We support all evergreen browsers and IE 10+.
 ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly. As for `fetch`: ajax.js co-exists as different take on a higher level API for XMLHttpRequest.
 
 #Usage:
-
-##Basic Usage
 ####Simple GET request
 ```javascript
 ajax("http://url.com").send(callback(data, status, headers));
@@ -64,7 +62,6 @@ notes:
 - Headers cannot be set when using [XDomainRequest](#xdr)
 
 ##API
-
 ```javascript
 ajax('url', 'get|post|put|delete')
 	.vars({'some':'variables'})
