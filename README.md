@@ -15,7 +15,7 @@ ajax.js was created because including jQuery (~93kb) just to preform some AJAX r
 #Usage:
 
 ##Basic Usage
-
+####Simple GET request
 ```javascript
 ajax("http://url.com").send(callback(data, status, headers));
 ```
@@ -26,6 +26,7 @@ notes:
 - If the url doesn't exist (i.e: `ajax()`) we default to the current page.
 - We also default to GET requests, more below.
 
+####GETing some JSON
 ```javascript
 ajax("http://somejson.org").json().send(callback(data, status, headers));
 ```
@@ -33,17 +34,36 @@ notes:
 
 - adding in `.json()` will parse the result as JSON and fill data with the resulting object. Naturally this will explode if the request is actually HTML/XML/etc.
 
+####URL vars and POST
 ```javascript
 ajax("http://postingvars.name", "post").vars({'name':'bob'}).send(callback(data, status, headers));
 ```
 notes: 
 
 - As mentioned above we default to GET requests, however `ajax()` takes any valid HTTP method as it's second argument.
-- `.vars()` can naturally be used for any request type, it simply generates URL variables from a valid JS object: `{key:value}` becomes `?key=value` which is appended to the URL.
+- `.vars()` can naturally be used for any request type, it simply generates URL variables from a valid JS object: `{key:value}` becomes `?key=value` (and appended to the URL).
 
+####Events and errors
+```javascript
+ajax("https://thismightfail.org")
+	.progress(function(e) { console.log("progress!"); })
+	.error(function(e) { console.log("*BOOM*"); })
+	.send(callback(data, status, headers));
+```
+notes:
 
+- The error callback will be invoked if the request blows up in transit.
+- [Check out MDN for some detail on the progress event](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent).
+ 
+####X-HEADERS
+```javascript
+ajax("http://a_domain.pirate").headers({"X-SAIL":"7-seas"}).send(callback(data, status, headers));
+```
+notes:
 
-##Available Options
+- Headers cannot be set when using [XDomainRequest](#xdr)
+
+##API
 
 ```javascript
 ajax('url', 'get|post|put|delete')
