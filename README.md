@@ -10,7 +10,7 @@ ajax.js supports CommonJS/AMD and will fall back to declaring a single global aj
 We support all evergreen browsers and IE 10+.
 
 #####"But why not use/polyfill `fetch()`? why not jQuery?"  
-ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly. As for `fetch`: use it if you've got it, ajax.js co-exists as different take on a higher level XMLHttpRequest API.
+ajax.js was created because including jQuery (~93kb) just to preform some AJAX requests seems a little silly. As for `fetch`: ajax.js co-exists as different take on a higher level API for XMLHttpRequest.
 
 #Usage:
 
