@@ -6,7 +6,7 @@ Unminified the library is 3kb, minification takes it down to ~2kb.
 
 #About
 
-ajax.js supports CommonJS/AMD and will fallback to declaring a single ajax function on window.  
+ajax.js supports CommonJS/AMD and will fall back to declaring a single global ajax function.  
 We support all evergreen browsers and IE 10+.
 
 #####"But why not use/polyfill `fetch()`? why not jQuery?"  
@@ -58,12 +58,10 @@ ajax('url', 'get|post|put|delete')
 ```
 
 ###.send(function)
-Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.  
-This is the only non-optional 'option', and doesn't return `this`.
+Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.
 
 ###.vars(object)
-Expects an object as it's only parameter, which is then converted to a URL variable string. We do escape the components.
-returns `this`.
+Expects an object as it's only parameter, which is then converted to a URL variable string. We urlescape the components.
 
 ###.json(boolean)
 When used with no parameters it enables JSON parsing on the request data. When given a boolean it will enable (true) or disable (false) JSON parsing.
@@ -72,7 +70,10 @@ When used with no parameters it enables JSON parsing on the request data. When g
 Expects an object as it's only parameter, which is used to set the request headers.
 
 ###.progress(function)
-Binds the function to the progress event. See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for detail on progress events.
+Binds the function to the progress event. See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.error(function)
-Binds the function to the error event. See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for detail on progress events.
+Binds the function to the error event. See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
+
+###.xdr()
+Enables XDomainRequest on IE's that support it, not recommended if you can avoid it. Read [the MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest) and [this IEInternals post](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx) to understand the limitations of XDomainRequest. We don't build the request object using XDomainRequest by default because IE 10 implements XMLHttpRequest correctly while maintaining XDomainRequest for compatibility; It would be a shame to penalize IE 10 by default.

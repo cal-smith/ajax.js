@@ -3,7 +3,7 @@
 
 	var global = typeof self === "object"?self:global;
 
-	var Ajax = function(url, verb){
+	var Ajax = function(url, verb) {
 		this.req = new XMLHttpRequest();
 		this.req_verb = (typeof verb === "undefined")?"get":verb;
 		this.url = (typeof url === "undefined")?global.location.href:url;
@@ -11,7 +11,7 @@
 		return this;
 	};
 
-	Ajax.prototype.send = function(callback){
+	Ajax.prototype.send = function(callback) {
 		var promise = (typeof callback === "undefined")?true:false;
 
 		this.req.open(this.req_verb, this.url);
@@ -27,12 +27,13 @@
 		if (promise){
 			return new Promise(function(resolve, reject){
 				this.req.onload = function() {
-					//IE9 doesn't support the .response property
+					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 					var res = (typeof this.response === "undefined")?this.responseText:this.response;
+					var headers = (typeof this.getAllResponseHeaders === "undefined")?{}:this.getAllResponseHeaders();
 					if (parse_json === true){
 						return resolve(JSON.parse(res), this.status, this.getAllResponseHeaders());
 					} else {
-						return resolve(res, this.status, this.getAllResponseHeaders());
+						return resolve(res, this.status, headers);
 					}
 				};
 				this.req.onerror = function() {
@@ -43,19 +44,20 @@
 			});
 		} else {
 			this.req.onload = function(){
-				//IE9 doesn't support the .response property
+				//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 				var res = (typeof this.response === "undefined")?this.responseText:this.response;
+				var headers = (typeof this.getAllResponseHeaders === "undefined")?{}:this.getAllResponseHeaders();
 				if (parse_json === true){
 					callback(JSON.parse(res), this.status, this.getAllResponseHeaders());
 				} else {
-					callback(res, this.status, this.getAllResponseHeaders());
+					callback(res, this.status, headers);
 				}
 			};
 			this.req.send();
 		}
 	};
 
-	Ajax.prototype.vars = function(vars){
+	Ajax.prototype.vars = function(vars) {
 		this.url_var = "";
 		var keys = Object.keys(vars);
 		for (var i = 0; i < keys.length; i++) {
@@ -66,23 +68,28 @@
 		return this;
 	};
 
-	Ajax.prototype.json = function(json){
+	Ajax.prototype.json = function(json) {
 		this.parse_json = (typeof json === "undefined")?true:json;
 		return this;
 	};
 
-	Ajax.prototype.headers = function(headers){
+	Ajax.prototype.headers = function(headers) {
 		this.set_headers = headers;
 		return this;
 	};
 
-	Ajax.prototype.progress = function(callback){
+	Ajax.prototype.progress = function(callback) {
 		this.req.addEventListener("progress", callback, false);
 		return this;
 	};
 
-	Ajax.prototype.error = function(callback){
+	Ajax.prototype.error = function(callback) {
 		this.req.addEventListener("error", callback, false);
+		return this;
+	};
+
+	Ajax.prototype.xdr = function() {
+		global.XDomainRequest && (this.req = new XDomainRequest());
 		return this;
 	};
 
