@@ -23,7 +23,7 @@ notes:
 
 - We dont try to guess the protocol so the http(s):// portion of the url is essential.
 - By default `data` will be filled with the raw response text, json/xml/etc parsing is up to you.
-- If the url doesn't exist (i.e: `ajax()`) we default to the current page.
+- If the url isn't supplied we default to the current page.
 - We also default to GET requests, more below.
 
 ####GETing some JSON
