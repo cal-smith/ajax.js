@@ -75,6 +75,10 @@ ajax('url', 'get|post|put|delete')
 	.send(callback(data, status, headers));
 ```
 
+###ajax(string, string)
+`ajax("http://url.com", "get")`  
+The first argument must be a well formed URL, the second argument optionally specifies the HTTP request method (defaults to GET). If no arguments are provided a GET request to the current page will be constructed.
+
 ###.send(function)
 `.send(function(data, status, headers));`  
 Sends the request and either invokes the function passed as a callback on completion, or if no callback function is provided, it returns a Promise. Be sure to polyfill Promises if you need support in older browsers.  
@@ -82,7 +86,7 @@ The callback will be supplied with the response `data`, the resulting `status` c
 
 ###.vars(object)
 `.vars({'one':'fish', 'two':'fish', 'red':'fish', 'blue','fish'})`  
-Expects an object as it's only parameter, which is then converted to a URL variable string. We urlescape the components.
+Expects an object as it's only parameter.
 
 ###.json(boolean)
 `.json()`  
@@ -90,7 +94,7 @@ When used with no parameters it enables JSON parsing on the request data. When g
 
 ###.headers(object)
 `.headers({'x-some-header':'some-value'})`  
-Expects an object as it's only parameter, which is used to set the request headers.
+Expects an object as it's only parameter.
 
 ###.progress(function)
 `.progress(function(e){ //handle event })`  
