@@ -1,4 +1,4 @@
-(function(){
+(function() {
 	"use strict";
 
 	var global = typeof self === "object"?self:global;
@@ -8,6 +8,7 @@
 		this.req_verb = (typeof verb === "undefined")?"get":verb;
 		this.url = (typeof url === "undefined")?global.location.href:url;
 		this.parse_json = false;
+		this.req_body = null;
 		return this;
 	};
 
@@ -17,20 +18,20 @@
 		this.req.open(this.req_verb, this.url);
 		
 		/*this has to be here, because it can only be called after open() is called*/
-		if(typeof this.set_headers !== "undefined"){
+		if(typeof this.set_headers !== "undefined") {
 			var keys = Object.keys(this.set_headers);
 			for (var i = 0; i < keys.length; i++) {
 				this.req.setRequestHeader(keys[i], this.set_headers[key[i]]);
 			}
 		}
 		var parse_json = this.parse_json;
-		if (promise){
-			return new Promise(function(resolve, reject){
+		if (promise) {
+			return new Promise(function(resolve, reject) {
 				this.req.onload = function() {
 					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 					var res = (typeof this.response === "undefined")?this.responseText:this.response;
 					var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
-					if (parse_json === true){
+					if (parse_json === true) {
 						return resolve(JSON.parse(res), this.status, this.getAllResponseHeaders());
 					} else {
 						return resolve(res, this.status, headers);
@@ -40,14 +41,14 @@
 					//TODO: more info to reject than just the status?
 					return reject(this.status);
 				};
-				this.req.send();
+				this.req.send(this.req_body);
 			});
 		} else {
-			this.req.onload = function(){
+			this.req.onload = function() {
 				//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 				var res = (typeof this.response === "undefined")?this.responseText:this.response;
 				var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
-				if (parse_json === true){
+				if (parse_json === true) {
 					callback(JSON.parse(res), this.status, this.getAllResponseHeaders());
 				} else {
 					callback(res, this.status, headers);
@@ -75,6 +76,11 @@
 
 	Ajax.prototype.headers = function(headers) {
 		this.set_headers = headers;
+		return this;
+	};
+
+	Ajax.prototype.body = function(body) {
+		this.req_body = body;
 		return this;
 	};
 
