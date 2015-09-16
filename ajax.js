@@ -54,7 +54,7 @@
 					callback(res, this.status, headers);
 				}
 			};
-			this.req.send();
+			this.req.send(this.req_body);
 		}
 	};
 
@@ -120,5 +120,4 @@
 			}
 		});
 	}
-
 })();
