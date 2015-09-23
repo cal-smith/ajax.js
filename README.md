@@ -32,6 +32,7 @@ var promise = ajax("http://url.com").send();
 promise.then(function(data, status, headers) {
 	console.log(data);
 });
+```
 
 notes:
 
