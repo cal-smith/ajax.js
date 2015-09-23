@@ -4,6 +4,8 @@ ajax.js
 ajax.js intends to be a nice, lightweight, AJAX library.
 Unminified the library is 3kb, minification takes it down to ~2kb.
 
+Download the minified release [here](https://github.com/hansolo669/ajax.js/releases/download/v1.0.0/ajax.min.js).
+
 #About
 
 ajax.js supports CommonJS/AMD and will fall back to declaring a single global ajax function.  
