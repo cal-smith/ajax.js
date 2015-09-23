@@ -1,5 +1,7 @@
-install: npm install uglify-js
 script: ruby build.rb
+sudo: false
+language: node_js
+node_js: iojs
 deploy:
   provider: releases
   api_key:

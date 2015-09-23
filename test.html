@@ -1,38 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<script type="text/javascript" src="ajax.js"></script>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+	<div id="output"></div>
 	<script type="text/javascript">
+	//Object.keys polyfill
+	if (!Object.keys) {
+		Object.keys = function(obj) {
+			var props = [];
+			for (var p in obj) { if (obj.hasOwnProperty(p)) props.push(p); }
+			return props;
+		}
+	}
 	var a = ajax("http://some.url", "post");
 	var headers = {some:"header"};
+	function log(test, property, expecting, result) {
+		var e = document.getElementById("output");
+		e.innerHTML += "<p> " + test + " " + property + " expecting: " + expecting + " " + (result?"<span style=color:blue;>" + result + "</span>": "<span style=color:red;>" + result + "</span>") + "</p>";
+	}
+	function blank() {
+		var e = document.getElementById("output");
+		e.innerHTML += "<p></p>";
+	}
 	a.send = function (argument) {
-		console.log("url", this.url, "expecting: http://some.url?one=1&two=2", this.url === "http://some.url?one=1&two=2");
-		console.log("verb", this.req_verb, "expecting: post", this.req_verb === "post");
-		console.log("vars", this.url_var, "expecting: one=1&two=2", this.url_var === "one=1&two=2");
-		console.log("json", this.parse_json, "expecting: false", this.parse_json === false);
-		console.log("headers", this.set_headers, "expecting {some:'header'}", this.set_headers === headers);
-		console.log("progress callback", this.progress_callback, "expecting: undefined", this.progress_callback == null);
-		console.log("error callback", this.error_callback, "expecting: undefined", this.error_callback == null);
+		log("url", this.url, "http://some.url?one=1&two=2", this.url === "http://some.url?one=1&two=2");
+		log("verb", this.req_verb, "post", this.req_verb === "post");
+		log("vars", this.url_var, "one=1&two=2", this.url_var === "one=1&two=2");
+		log("json", this.parse_json, "false", this.parse_json === false);
+		log("headers", this.set_headers, "some:'header'}", this.set_headers === headers);
+		log("progress callback", this.progress_callback, "undefined", this.progress_callback == null);
+		log("error callback", this.error_callback, "undefined", this.error_callback == null);
 		
 	};
 	a.vars({one:"1", two:"2"}).json(false).headers(headers).send();
-	console.log("\n");
+	blank();
 	
 	var b = ajax();
 	b.send = function (argument) {
-		console.log("url", this.url, "expecting: " + window.location.href, this.url === window.location.href);
-		console.log("verb", this.req_verb, "expecting: get", this.req_verb === "get");
-		console.log("vars", this.url_var, "expecting: undefined", this.url_var == null);
-		console.log("json", this.parse_json, "expecting: false", this.parse_json === false);
-		console.log("headers", this.set_headers, "expecting undefined", this.set_headers == null);
-		console.log("progress callback", this.progress_callback, "expecting: undefined", this.progress_callback == null);
-		console.log("error callback", this.error_callback, "expecting: undefined", this.error_callback == null);
+		log("url", this.url, window.location.href, this.url === window.location.href);
+		log("verb", this.req_verb, "get", this.req_verb === "get");
+		log("vars", this.url_var, "undefined", this.url_var == null);
+		log("json", this.parse_json, "false", this.parse_json === false);
+		log("headers", this.set_headers, "undefined", this.set_headers == null);
+		log("progress callback", this.progress_callback, "undefined", this.progress_callback == null);
+		log("error callback", this.error_callback, "undefined", this.error_callback == null);
 		
 	};
-	b.get().send();
+	b.send();
 	</script>
 </body>
 </html>
