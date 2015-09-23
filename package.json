@@ -1,0 +1,28 @@
+{
+  "name": "ajax.js",
+  "version": "0.9.9",
+  "description": "A tiny ajax library",
+  "main": "ajax.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hansolo669/ajax.js.git"
+  },
+  "keywords": [
+    "ajax",
+    "browser"
+  ],
+  "author": "Callum Smith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hansolo669/ajax.js/issues"
+  },
+  "homepage": "https://github.com/hansolo669/ajax.js#readme",
+  "dependencies": {
+    "jasmine": "^2.3.2",
+    "uglify-js": "^2.4.24",
+    "xhr2": "^0.1.3"
+  }
+}

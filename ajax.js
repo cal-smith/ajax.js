@@ -7,7 +7,7 @@
 		this.req = new XMLHttpRequest();
 		this.req_verb = (typeof verb === "undefined")?"get":verb;
 		this.url = (typeof url === "undefined")?global.location.href:url;
-		this.parse_json = false;
+		this.parse_json = true;
 		this.req_body = null;
 		return this;
 	};
@@ -69,8 +69,8 @@
 		return this;
 	};
 
-	Ajax.prototype.json = function(json) {
-		this.parse_json = (typeof json === "undefined")?true:json;
+	Ajax.prototype.raw = function(bool) {
+		this.parse_json = (typeof bool === "undefined")?false:bool;
 		return this;
 	};
 
@@ -95,7 +95,7 @@
 	};
 
 	Ajax.prototype.xdr = function() {
-		global.XDomainRequest && (this.req = new XDomainRequest());
+		XDomainRequest && (this.req = new XDomainRequest());
 		return this;
 	};
 
