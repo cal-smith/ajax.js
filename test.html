@@ -7,49 +7,9 @@
 <body>
 	<div id="output"></div>
 	<script type="text/javascript">
-	//Object.keys polyfill
-	if (!Object.keys) {
-		Object.keys = function(obj) {
-			var props = [];
-			for (var p in obj) { if (obj.hasOwnProperty(p)) props.push(p); }
-			return props;
-		}
-	}
-	var a = ajax("http://some.url", "post");
-	var headers = {some:"header"};
-	function log(test, property, expecting, result) {
-		var e = document.getElementById("output");
-		e.innerHTML += "<p> " + test + " " + property + " expecting: " + expecting + " " + (result?"<span style=color:blue;>" + result + "</span>": "<span style=color:red;>" + result + "</span>") + "</p>";
-	}
-	function blank() {
-		var e = document.getElementById("output");
-		e.innerHTML += "<p></p>";
-	}
-	a.send = function (argument) {
-		log("url", this.url, "http://some.url?one=1&two=2", this.url === "http://some.url?one=1&two=2");
-		log("verb", this.req_verb, "post", this.req_verb === "post");
-		log("vars", this.url_var, "one=1&two=2", this.url_var === "one=1&two=2");
-		log("json", this.parse_json, "false", this.parse_json === false);
-		log("headers", this.set_headers, "some:'header'}", this.set_headers === headers);
-		log("progress callback", this.progress_callback, "undefined", this.progress_callback == null);
-		log("error callback", this.error_callback, "undefined", this.error_callback == null);
-		
-	};
-	a.vars({one:"1", two:"2"}).json(false).headers(headers).send();
-	blank();
-	
-	var b = ajax();
-	b.send = function (argument) {
-		log("url", this.url, window.location.href, this.url === window.location.href);
-		log("verb", this.req_verb, "get", this.req_verb === "get");
-		log("vars", this.url_var, "undefined", this.url_var == null);
-		log("json", this.parse_json, "false", this.parse_json === false);
-		log("headers", this.set_headers, "undefined", this.set_headers == null);
-		log("progress callback", this.progress_callback, "undefined", this.progress_callback == null);
-		log("error callback", this.error_callback, "undefined", this.error_callback == null);
-		
-	};
-	b.send();
+	//this is just a blank testfile for playing with ajax.js
+	//you can serve it locally with python3 -m http.server
+	//or however you see fit
 	</script>
 </body>
 </html>

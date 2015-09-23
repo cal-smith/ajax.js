@@ -13,21 +13,22 @@
 	};
 
 	Ajax.prototype.send = function(callback) {
+		var self = this;//fixes the issues of "this" scope
 		var promise = (typeof callback === "undefined")?true:false;
 
-		this.req.open(this.req_verb, this.url);
+		self.req.open(self.req_verb, self.url);
 		
 		/*this has to be here, because it can only be called after open() is called*/
-		if(typeof this.set_headers !== "undefined") {
-			var keys = Object.keys(this.set_headers);
+		if(typeof self.set_headers !== "undefined") {
+			var keys = Object.keys(self.set_headers);
 			for (var i = 0; i < keys.length; i++) {
-				this.req.setRequestHeader(keys[i], this.set_headers[key[i]]);
+				self.req.setRequestHeader(keys[i], self.set_headers[key[i]]);
 			}
 		}
-		var parse_json = this.parse_json;
-		if (promise) {
+		var parse_json = self.parse_json;
+		if (promise) {	
 			return new Promise(function(resolve, reject) {
-				this.req.onload = function() {
+				self.req.onload = function() {
 					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
 					var res = (typeof this.response === "undefined")?this.responseText:this.response;
 					var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
@@ -37,11 +38,11 @@
 						return resolve(res, this.status, headers);
 					}
 				};
-				this.req.onerror = function() {
+				self.req.onerror = function() {
 					//TODO: more info to reject than just the status?
 					return reject(this.status);
 				};
-				this.req.send(this.req_body);
+				self.req.send(self.req_body);
 			});
 		} else {
 			this.req.onload = function() {
@@ -54,7 +55,7 @@
 					callback(res, this.status, headers);
 				}
 			};
-			this.req.send(this.req_body);
+			self.req.send(self.req_body);
 		}
 	};
 

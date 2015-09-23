@@ -14,7 +14,9 @@ We support all evergreen browsers, and tentatively IE 10+.
 #Usage:
 ####Simple GET request
 ```javascript
-ajax("http://url.com").send(callback(data, status, headers));
+ajax("http://url.com").send(function(data, status, headers) {
+	console.log(data);
+});
 ```
 notes: 
 
@@ -23,6 +25,18 @@ notes:
 - If the url isn't supplied we default to the current page.
 - We also default to GET requests, more below.
 - `.send()` bundles everything up and preforms the request.
+
+####Promises work too!
+```javascript
+var promise = ajax("http://url.com").send();
+promise.then(function(data, status, headers) {
+	console.log(data);
+});
+
+notes:
+
+- We dont polyfill promises check [here](http://caniuse.com/#feat=promises) for browser support or [here](https://github.com/jakearchibald/es6-promise) for a polyfill.
+- Promises are pretty awesome (when you have native support).
 
 ####GETing some raw data
 ```javascript
