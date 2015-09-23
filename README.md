@@ -110,11 +110,11 @@ Expects an object as it's only parameter. The unpacking of the header object is 
 
 ###.progress(function)
 `.progress(function(e){ //handle event })`  
-Binds the given function to the progress event, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
+Binds the given function as the progress event handler, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.error(function)
 `.error(function(e){ //handle event })`  
-Binds the given function to the error event, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
+Binds the given function as the error event handler, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
 
 ###.xdr()
 Enables XDomainRequest on IE's that support it - not recommended if you can avoid it. Read [the MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest) and [this IEInternals post](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx) to understand the limitations of XDomainRequest.
