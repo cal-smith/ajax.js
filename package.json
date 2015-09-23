@@ -1,6 +1,6 @@
 {
   "name": "ajax.js",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "description": "A tiny ajax library",
   "main": "ajax.js",
   "scripts": {
