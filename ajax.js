@@ -1,12 +1,12 @@
 (function() {
 	"use strict";
 
-	var global = typeof self === "object"?self:global;
+	var root = typeof self === "object"?self:global;
 
 	var Ajax = function(url, verb) {
 		this.req = new XMLHttpRequest();
 		this.req_verb = (verb === undefined)?"get":verb;
-		this.url = (url === undefined)?global.location.href:url;
+		this.url = (url === undefined)?root.location.href:url;
 		this.parse_json = true;
 		this.req_body = null;
 		return this;
@@ -113,8 +113,8 @@
 			return new Ajax(url, verb);
 		}
 	} else {
-		if (typeof global.ajax === "undefined") {
-			global.ajax = function(url, verb) {
+		if (typeof root.ajax === "undefined") {
+			root.ajax = function(url, verb) {
 				return new Ajax(url, verb);
 			}
 		}
