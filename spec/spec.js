@@ -1,10 +1,17 @@
 var ajax = require("../ajax.js");
 XMLHttpRequest = require("xhr2");
+window = global;
+window.XMLHttpRequest = XMLHttpRequest;
 
 describe("Option Setting Tests", function(){
 	it("sets a url", function(){
 		var a = ajax("http://test.url");
 		expect(a.url).toBe("http://test.url");
+	});
+
+	it("doesnt set a request method", function(){
+		var a = ajax("http://test.url");
+		expect(a.req_verb).toBe("get");
 	});
 
 	it("sets a var object", function(){
@@ -46,3 +53,9 @@ describe("Option Setting Tests", function(){
 		expect(a.req.xdr_faker).toBe(true);
 	});
 });
+
+/*describe("XHR mock tests", function(){
+	beforeEach(function() {
+		//jasmine.Ajax.install();
+	});
+});*/

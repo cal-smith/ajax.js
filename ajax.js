@@ -30,12 +30,12 @@
 			return new Promise(function(resolve, reject) {
 				self.req.onload = function() {
 					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
-					var res = (this.response === undefined)?this.responseText:this.response;
 					var headers = (this.getAllResponseHeaders === undefined)?"":this.getAllResponseHeaders();
 					if (parse_json === true) {
-						return resolve(JSON.parse(res), this.status, this.getAllResponseHeaders());
+						//promises can only ever take a single argument
+						return resolve(JSON.parse(res));
 					} else {
-						return resolve(res, this.status, headers);
+						return resolve(res);
 					}
 				};
 				self.req.onerror = function() {
