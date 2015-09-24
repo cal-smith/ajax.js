@@ -50,12 +50,13 @@ notes:
 
 ####URL vars and POST
 ```javascript
-ajax("http://postingvars.name", "post").vars({'name':'bob'}).send(callback(data, status, headers));
+ajax("http://postingvars.name", "post").vars({'name':'bob'}).data({'request':'body data'}).send(callback(data, status, headers));
 ```
 notes: 
 
 - As mentioned above we default to GET requests, however `ajax()` takes any valid HTTP method as it's second argument.
 - `.vars()` can naturally be used for any request type, it simply generates URL variables from a valid JS object: `{key:value}` becomes `?key=value` (and appended to the URL).
+- `.data()` takes an object and generates a urlencoded string to be sent in the request body data. This is only valid for POST and PUT request types, GET will simply discard the data.
 
 ####Events and errors
 ```javascript
@@ -81,11 +82,15 @@ notes:
 ```javascript
 ajax('url', 'get|post|put|delete')
 	.vars({'some':'variables'})
+	.data({'more':'variables'})
 	.raw(true|false)
 	.headers({'req':'headers'})
 	.progress(function(event))
 	.error(function(event))
 	.send(callback(data, status, headers));
+	//optionally .then(function(data), function(error));
+	// can be appended to .send() when using the Promise
+	// form (invoking send with no callback)
 ```
 
 ###ajax(string, string)
@@ -100,6 +105,10 @@ The callback will be supplied with the response `data`, the resulting `status` c
 ###.vars(object)
 `.vars({'one':'fish', 'two':'fish', 'red':'fish', 'blue','fish'})`  
 Expects an object as it's only parameter. It will unpack the object into a argument string and append that to the request URL.
+
+###.data(object)
+`.data({'one':'var', 'another':'var'})`
+Unpacks the object into the body of a POST request, and sets the appropriate headers (namely Content-type: application/x-www-form-urlencoded).
 
 ###.raw(boolean)
 `.raw()`  
@@ -116,6 +125,3 @@ Binds the given function as the progress event handler, the callback will receiv
 ###.error(function)
 `.error(function(e){ //handle event })`  
 Binds the given function as the error event handler, the callback will receive ProgressEvents - See [this](https://developer.mozilla.org/en-US/docs/Web/API/ProgressEvent) for more detail.
-
-###.xdr()
-Enables XDomainRequest on IE's that support it - not recommended if you can avoid it. Read [the MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/XDomainRequest) and [this IEInternals post](http://blogs.msdn.com/b/ieinternals/archive/2010/05/13/xdomainrequest-restrictions-limitations-and-workarounds.aspx) to understand the limitations of XDomainRequest.

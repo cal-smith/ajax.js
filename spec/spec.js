@@ -18,8 +18,8 @@ describe("Option Setting Tests", function(){
 	});
 
 	it("starts a POST request and sets vars", function(){
-		var a = ajax("http://test.url", "POST").vars({test1:"test", test2:"testtest"});
-		expect(a.post_vars).toBe(true);
+		var a = ajax("http://test.url", "POST").vars({test1:"test"}).data({test2:"test"});
+		expect(a.req_body).toBe("test2=test");
 	});
 
 	it("sets raw data return", function(){
@@ -33,11 +33,6 @@ describe("Option Setting Tests", function(){
 		expect(a.set_headers).toBe(headers);
 	});
 
-	it("sets a body", function(){
-		var a = ajax("http://test.url").body("some data");
-		expect(a.req_body).toBe("some data");
-	});
-
 	it("sets a progress callback", function(){
 		var cb = function(){};
 		var a = ajax("http://test.url").progress(cb);
@@ -48,11 +43,5 @@ describe("Option Setting Tests", function(){
 		var cb = function(){};
 		var a = ajax("http://test.url").error(cb);
 		expect(a.req._listeners.error[0]).toBe(cb);
-	});
-
-	it("creates an xdomain request object", function(){
-		XDomainRequest = function(){this.xdr_faker = true};
-		var a = ajax("http://test.url").xdr();
-		expect(a.req.xdr_faker).toBe(true);
 	});
 });

@@ -26,9 +26,9 @@
 			}
 		}
 
-		if (self.post_vars) {
+		if (self.req_body) {
 			self.req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			self.req.setRequestHeader("Content-length", self.url_var.length);
+			self.req.setRequestHeader("Content-length", self.req_body.length);
 			self.req.setRequestHeader("Connection", "close");
 		}
 
@@ -72,15 +72,7 @@
 			if (i > 0) this.url_var += "&";
 			this.url_var += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(vars[keys[i]]);
 		}
-
-		//POST(and PUT) expect all variables as body data rather 
-		// than appended to the URL - this accomodates for that
-		if (this.req_verb.toLowerCase() == "post" || this.req_verb.toLowerCase() == "put") {
-			this.body(this.url_var);
-			this.post_vars = true;
-		} else {
-			this.url += "?" + this.url_var;
-		}
+		this.url += "?" + this.url_var;
 		return this;
 	};
 
@@ -94,7 +86,13 @@
 		return this;
 	};
 
-	Ajax.prototype.body = function(body) {
+	Ajax.prototype.data = function(data) {
+		var body = "";
+		var keys = Object.keys(data);
+		for (var i = 0; i < keys.length; i++) {
+			if (i > 0) body += "&";
+			body += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(data[keys[i]]);
+		}
 		this.req_body = body;
 		return this;
 	};
@@ -106,11 +104,6 @@
 
 	Ajax.prototype.error = function(callback) {
 		this.req.addEventListener("error", callback, false);
-		return this;
-	};
-
-	Ajax.prototype.xdr = function() {
-		XDomainRequest && (this.req = new XDomainRequest());
 		return this;
 	};
 
