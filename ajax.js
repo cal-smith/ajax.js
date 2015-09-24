@@ -18,12 +18,18 @@
 
 		self.req.open(self.req_verb, self.url, true);
 		
-		//this has to be here, because it can only be called after open() is called
+		//Headers can only be set after open() is called
 		if(self.set_headers !== undefined) {
 			var keys = Object.keys(self.set_headers);
 			for (var i = 0; i < keys.length; i++) {
 				self.req.setRequestHeader(keys[i], self.set_headers[key[i]]);
 			}
+		}
+
+		if (self.post_vars) {
+			self.req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			self.req.setRequestHeader("Content-length", self.url_var.length);
+			self.req.setRequestHeader("Connection", "close");
 		}
 
 		var parse_json = self.parse_json;
@@ -32,7 +38,7 @@
 				self.req.onload = function() {
 					var res = (this.response === undefined)?this.responseText:this.response;
 					if (parse_json === true) {
-						//promises can only ever take a single argument
+						//Promises can only ever take a single argument
 						return resolve(JSON.parse(res));
 					} else {
 						return resolve(res);
@@ -66,11 +72,11 @@
 			if (i > 0) this.url_var += "&";
 			this.url_var += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(vars[keys[i]]);
 		}
-		
+
 		//POST(and PUT) expect all variables as body data rather 
-		//than appended to the URL - this accomodates for that
+		// than appended to the URL - this accomodates for that
 		if (this.req_verb.toLowerCase() == "post" || this.req_verb.toLowerCase() == "put") {
-			this.body(url_var);
+			this.body(this.url_var);
 			this.post_vars = true;
 		} else {
 			this.url += "?" + this.url_var;
