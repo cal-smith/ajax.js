@@ -16,21 +16,21 @@
 		var self = this;//fixes the issues of "this" scope
 		var promise = (callback === undefined)?true:false;
 
-		self.req.open(self.req_verb, self.url);
+		self.req.open(self.req_verb, self.url, true);
 		
-		/*this has to be here, because it can only be called after open() is called*/
+		//this has to be here, because it can only be called after open() is called
 		if(self.set_headers !== undefined) {
 			var keys = Object.keys(self.set_headers);
 			for (var i = 0; i < keys.length; i++) {
 				self.req.setRequestHeader(keys[i], self.set_headers[key[i]]);
 			}
 		}
+
 		var parse_json = self.parse_json;
 		if (promise) {	
 			return new Promise(function(resolve, reject) {
 				self.req.onload = function() {
-					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
-					var headers = (this.getAllResponseHeaders === undefined)?"":this.getAllResponseHeaders();
+					var res = (this.response === undefined)?this.responseText:this.response;
 					if (parse_json === true) {
 						//promises can only ever take a single argument
 						return resolve(JSON.parse(res));
@@ -66,7 +66,15 @@
 			if (i > 0) this.url_var += "&";
 			this.url_var += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(vars[keys[i]]);
 		}
-		this.url += "?" + this.url_var;
+		
+		//POST(and PUT) expect all variables as body data rather 
+		//than appended to the URL - this accomodates for that
+		if (this.req_verb.toLowerCase() == "post" || this.req_verb.toLowerCase() == "put") {
+			this.body(url_var);
+			this.post_vars = true;
+		} else {
+			this.url += "?" + this.url_var;
+		}
 		return this;
 	};
 
