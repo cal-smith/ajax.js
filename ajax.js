@@ -5,8 +5,8 @@
 
 	var Ajax = function(url, verb) {
 		this.req = new XMLHttpRequest();
-		this.req_verb = (typeof verb === "undefined")?"get":verb;
-		this.url = (typeof url === "undefined")?global.location.href:url;
+		this.req_verb = (verb === undefined)?"get":verb;
+		this.url = (url === undefined)?global.location.href:url;
 		this.parse_json = true;
 		this.req_body = null;
 		return this;
@@ -14,12 +14,12 @@
 
 	Ajax.prototype.send = function(callback) {
 		var self = this;//fixes the issues of "this" scope
-		var promise = (typeof callback === "undefined")?true:false;
+		var promise = (callback === undefined)?true:false;
 
 		self.req.open(self.req_verb, self.url);
 		
 		/*this has to be here, because it can only be called after open() is called*/
-		if(typeof self.set_headers !== "undefined") {
+		if(self.set_headers !== undefined) {
 			var keys = Object.keys(self.set_headers);
 			for (var i = 0; i < keys.length; i++) {
 				self.req.setRequestHeader(keys[i], self.set_headers[key[i]]);
@@ -30,8 +30,8 @@
 			return new Promise(function(resolve, reject) {
 				self.req.onload = function() {
 					//Old IE doesn't support the .response property, or .getAllResponseHeaders()
-					var res = (typeof this.response === "undefined")?this.responseText:this.response;
-					var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
+					var res = (this.response === undefined)?this.responseText:this.response;
+					var headers = (this.getAllResponseHeaders === undefined)?"":this.getAllResponseHeaders();
 					if (parse_json === true) {
 						return resolve(JSON.parse(res), this.status, this.getAllResponseHeaders());
 					} else {
@@ -47,8 +47,8 @@
 		} else {
 			this.req.onload = function() {
 				//Old IE doesn't support the .response property, or .getAllResponseHeaders()
-				var res = (typeof this.response === "undefined")?this.responseText:this.response;
-				var headers = (typeof this.getAllResponseHeaders === "undefined")?"":this.getAllResponseHeaders();
+				var res = (this.response === undefined)?this.responseText:this.response;
+				var headers = (this.getAllResponseHeaders === undefined)?"":this.getAllResponseHeaders();
 				if (parse_json === true) {
 					callback(JSON.parse(res), this.status, this.getAllResponseHeaders());
 				} else {
@@ -71,7 +71,7 @@
 	};
 
 	Ajax.prototype.raw = function(bool) {
-		this.parse_json = (typeof bool === "undefined")?false:bool;
+		this.parse_json = (bool === undefined)?false:bool;
 		return this;
 	};
 
