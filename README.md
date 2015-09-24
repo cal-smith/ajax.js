@@ -29,7 +29,7 @@ notes:
 ####Promises work too!
 ```javascript
 var promise = ajax("http://url.com").send();
-promise.then(function(data, status, headers) {
+promise.then(function(data) {
 	console.log(data);
 });
 ```
@@ -37,6 +37,7 @@ promise.then(function(data, status, headers) {
 notes:
 
 - We dont polyfill promises check [here](http://caniuse.com/#feat=promises) for browser support or [here](https://github.com/jakearchibald/es6-promise) for a polyfill.
+- Promises may only take one argument. For the sake of simplicity we just pass in the data returned from the AJAX call.
 - Promises are pretty awesome (when you have native support).
 
 ####GETing some raw data
