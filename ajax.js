@@ -22,7 +22,7 @@
 		if(self.set_headers !== undefined) {
 			var keys = Object.keys(self.set_headers);
 			for (var i = 0; i < keys.length; i++) {
-				self.req.setRequestHeader(keys[i], self.set_headers[key[i]]);
+				self.req.setRequestHeader(keys[i], self.set_headers[keys[i]]);
 			}
 		}
 
