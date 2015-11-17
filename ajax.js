@@ -13,7 +13,14 @@
 	};
 
 	Ajax.prototype.send = function(callback) {
-		var self = this;//fixes the issues of "this" scope
+		/* 
+		 "this" in javascript can be problamatic. By 
+		  assigning it to another variable ("self" here)
+		  we retain the ability to reference this "this" 
+		  from within other scopes, making use of a 
+		  construct known as a closure.
+		*/
+		var self = this;
 		var promise = (callback === undefined)?true:false;
 
 		self.req.open(self.req_verb, self.url, true);
@@ -38,14 +45,16 @@
 				self.req.onload = function() {
 					var res = (this.response === undefined)?this.responseText:this.response;
 					if (parse_json === true) {
-						//Promises can only ever take a single argument
+						/*
+						 Promises can only ever resolve (take) a single argument,
+						 similar to how functions can only return a single value.
+						*/
 						return resolve(JSON.parse(res));
 					} else {
 						return resolve(res);
 					}
 				};
 				self.req.onerror = function() {
-					//TODO: more info to reject than just the status?
 					return reject(this.status);
 				};
 				self.req.send(self.req_body);
@@ -86,14 +95,63 @@
 		return this;
 	};
 
-	Ajax.prototype.data = function(data) {
-		var body = "";
-		var keys = Object.keys(data);
-		for (var i = 0; i < keys.length; i++) {
-			if (i > 0) body += "&";
-			body += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(data[keys[i]]);
+	Ajax.prototype._body_data = {
+		_urlencode: function(data) {
+			if (typeof data === "object") {
+				var body = "";
+				var keys = Object.keys(data);
+				for (var i = 0; i < keys.length; i++) {
+					if (i > 0) body += "&";
+					body += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(data[keys[i]]);
+				}
+				this.req_body = body;
+				return body;
+			} else {
+				throw "Invalid data"
+			}
+		},
+		_form_data: function(data){
+
+		},
+		_file_data: function(data){
+
+		},
+		_array_data: function(data){
+
+		},
+		_string_data: function(data){
+
 		}
-		this.req_body = body;
+	};
+
+	Ajax.prototype.data = function(data) {
+		if (data instanceof FormData) {
+			//FormData has well specified behavoiur in 
+			// XMLHttpRequest, we make use of this.
+			// (ie. it should automatically be transformed
+			//	into a usefull form with correct headers)
+			this._body_data._form_data(data);
+		} else if (data instanceof Blob) {
+			//Blob is the native file handling interface
+			// XMLHttpRequest has well defined behaviour
+			// for Blob's, and so we assume a correctly 
+			// formed object.
+			this._body_data._file_data(data);
+		} else if (data instanceof Array) {
+			//
+			this._body_data._array_data(data);
+		} else if (data instanceof String) {
+			//if it's a string, we make use of XMLHttpReqests
+			// inbuilt string handling and set it as the
+			// body data. naturally validation is up to you.
+			this._body_data._string_data(data);
+		} else {
+			//we assume an object has been passed
+			// for transformation to a key=value 
+			// urlencoded string, and we set
+			// the appropriate headers.
+			this._body_data._urlencode(data);
+		}
 		return this;
 	};
 
