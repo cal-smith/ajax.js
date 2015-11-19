@@ -76,7 +76,7 @@ ajax("http://a_domain.pirate").headers({"X-SAIL":"7-seas"}).send(callback(data, 
 ```
 notes:
 
-- Headers cannot be set when using [XDomainRequest](#xdr)
+- \*dust*
 
 ##API
 ```javascript

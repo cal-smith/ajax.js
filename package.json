@@ -4,7 +4,8 @@
   "description": "A tiny ajax library",
   "main": "ajax.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "jasmine",
+    "build": "uglifyjs ajax.js -o ajax.min.js"
   },
   "repository": {
     "type": "git",

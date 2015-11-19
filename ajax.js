@@ -62,6 +62,7 @@
 		} else {
 			this.req.onload = function() {
 				//Old IE doesn't support the .response property, or .getAllResponseHeaders()
+				// As we are aiming to support only more modern IE, this may be dropped in the future
 				var res = (this.response === undefined)?this.responseText:this.response;
 				var headers = (this.getAllResponseHeaders === undefined)?"":this.getAllResponseHeaders();
 				if (parse_json === true) {
