@@ -5,7 +5,7 @@
   "main": "ajax.js",
   "scripts": {
     "test": "jasmine",
-    "build": "uglifyjs ajax.js -o ajax.min.js"
+    "prepublish": "uglifyjs ajax.js -o ajax.min.js"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,8 @@
   "bugs": {
     "url": "https://github.com/hansolo669/ajax.js/issues"
   },
-  "homepage": "https://github.com/hansolo669/ajax.js#readme",
-  "dependencies": {
+  "homepage": "https://github.com/hansolo669/ajax.js#readme", 
+  "devDependencies": {
     "jasmine": "^2.3.2",
     "uglify-js": "^2.4.24",
     "xhr2": "^0.1.3"

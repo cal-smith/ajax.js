@@ -16,9 +16,8 @@
 		/* 
 		 "this" in javascript can be problamatic. By 
 		  assigning it to another variable ("self" here)
-		  we retain the ability to reference this "this" 
-		  from within other scopes, making use of a 
-		  construct known as a closure.
+		  we can treat the current scopes "this" as we
+		  would any other variable.
 		*/
 		var self = this;
 		var promise = (callback === undefined)?true:false;
@@ -33,7 +32,7 @@
 			}
 		}
 
-		if (self.req_body) {
+		if (self.body_headers = "urlencoded") {
 			self.req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			self.req.setRequestHeader("Content-length", self.req_body.length);
 			self.req.setRequestHeader("Connection", "close");
@@ -96,62 +95,29 @@
 		return this;
 	};
 
-	Ajax.prototype._body_data = {
-		_urlencode: function(data) {
-			if (typeof data === "object") {
-				var body = "";
-				var keys = Object.keys(data);
-				for (var i = 0; i < keys.length; i++) {
-					if (i > 0) body += "&";
-					body += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(data[keys[i]]);
-				}
-				this.req_body = body;
-				return body;
-			} else {
-				throw "Invalid data"
-			}
-		},
-		_form_data: function(data){
-
-		},
-		_file_data: function(data){
-
-		},
-		_array_data: function(data){
-
-		},
-		_string_data: function(data){
-
-		}
-	};
-
 	Ajax.prototype.data = function(data) {
-		if (data instanceof FormData) {
-			//FormData has well specified behavoiur in 
-			// XMLHttpRequest, we make use of this.
-			// (ie. it should automatically be transformed
-			//	into a usefull form with correct headers)
-			this._body_data._form_data(data);
-		} else if (data instanceof Blob) {
-			//Blob is the native file handling interface
-			// XMLHttpRequest has well defined behaviour
-			// for Blob's, and so we assume a correctly 
-			// formed object.
-			this._body_data._file_data(data);
-		} else if (data instanceof Array) {
-			//
-			this._body_data._array_data(data);
-		} else if (data instanceof String) {
-			//if it's a string, we make use of XMLHttpReqests
-			// inbuilt string handling and set it as the
-			// body data. naturally validation is up to you.
-			this._body_data._string_data(data);
-		} else {
-			//we assume an object has been passed
-			// for transformation to a key=value 
+		if (data instanceof FormData
+			|| data instanceof Blob
+			|| data instanceof String) {
+			//XMLHttpRequest specifies behaviour for
+			// FormData, Bolb, and String so naturally
+			// we make use of this to make our lives
+			// easier.
+			this.req_body = body;
+		} else if (data instanceof Object) {
+			//We transform Objects to a key=value 
 			// urlencoded string, and we set
 			// the appropriate headers.
-			this._body_data._urlencode(data);
+			var body = "";
+			var keys = Object.keys(data);
+			for (var i = 0; i < keys.length; i++) {
+				if (i > 0) body += "&";
+				body += encodeURIComponent(keys[i]) + "=" + encodeURIComponent(data[keys[i]]);
+			}
+			this.req_body = body;
+			this.body_headers = "urlencoded";
+		} else {
+			throw "Invalid data";
 		}
 		return this;
 	};
