@@ -1,4 +1,6 @@
-script: ruby build.rb
+script: 
+    - ruby build.rb
+    - npm test
 sudo: false
 language: node_js
 node_js: iojs

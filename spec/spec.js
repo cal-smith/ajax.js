@@ -1,5 +1,7 @@
 var ajax = require("../ajax.js");
 XMLHttpRequest = require("xhr2");
+FormData = function () {};
+Blob = function() {};
 
 describe("Option Setting Tests", function(){
 	it("sets a url", function(){

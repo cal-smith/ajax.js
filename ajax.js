@@ -32,7 +32,7 @@
 			}
 		}
 
-		if (self.body_headers = "urlencoded") {
+		if (self.body_headers === "urlencoded") {
 			self.req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 			self.req.setRequestHeader("Content-length", self.req_body.length);
 			self.req.setRequestHeader("Connection", "close");
