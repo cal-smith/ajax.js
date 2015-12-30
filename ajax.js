@@ -103,7 +103,7 @@
 			// FormData, Bolb, and String so naturally
 			// we make use of this to make our lives
 			// easier.
-			this.req_body = body;
+			this.req_body = data;
 		} else if (data instanceof Object) {
 			//We transform Objects to a key=value 
 			// urlencoded string, and we set
